@@ -1,0 +1,27 @@
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Build outputs
+build/
+build_out/
+*.bin
+*.elf
+*.map
+
+# Python / Node
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+
+# Local experiment working files
+*.pcap
+*.pcapng
+*.log
+.DS_Store
