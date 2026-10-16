@@ -1,0 +1,6 @@
+profile,delivered,structured_delivery_percent,completed_cycles,cycle_delivery_percent,rtt_median_ms,rtt_p95_ms,forward_missing_percent
+network_baseline,1000,100.0,1000,100.00,130.0,548.00,0
+plus_200ms_delay,1000,100.0,1000,100.00,337.0,748.00,0
+random_loss_10pct,1000,100.0,1000,100.00,129.5,6535.35,9.552418
+targeted_loss_20pct,991,99.1,1004,98.71,132.0,6912.00,19.946524
+targeted_loss_50pct,739,73.9,1126,65.63,546.0,13300.40,50.535540
