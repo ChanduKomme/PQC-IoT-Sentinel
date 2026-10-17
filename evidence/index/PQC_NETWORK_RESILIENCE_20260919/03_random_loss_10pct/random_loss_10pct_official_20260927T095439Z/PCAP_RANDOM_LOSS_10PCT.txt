@@ -1,0 +1,8 @@
+run_id=random_loss_10pct_official_20260927T095439Z
+configured_loss_pct=10
+ap0_in_sender_to_receiver=3329
+wlan0_out_sender_to_receiver=3011
+inferred_forward_drops=318
+empirical_forward_loss_pct=9.552418
+wlan0_in_receiver_to_sender=3011
+ap0_out_receiver_to_sender=3011

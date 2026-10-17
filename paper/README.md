@@ -1,39 +1,16 @@
-# Conference paper
+# Manuscript and historical reports
 
-## Manuscript
+**The final conference manuscript PDF is not present in the supplied archives and is not included in this release.**
 
-**Beyond the Handshake: A 24-Hour Study of Post-Quantum Messaging and DTLS on BL602**
+The intended title is *Beyond the Handshake: A 24-Hour Study of Post-Quantum Messaging and DTLS on BL602*. An earlier repository recorded a final-PDF hash, but the corresponding bytes were not supplied here; that hash is not presented as a verified available file.
 
-The Version 1 manuscript PDF is expected at:
+Available historical material:
 
-```text
-paper/Beyond_the_Handshake_Conference_Paper.pdf
-```
+| File | Actual role |
+|---|---|
+| [PQC_Security_Dashboard_2026-09-18.pdf](historical/PQC_Security_Dashboard_2026-09-18.pdf) | Historical dashboard export |
+| [PQC_IoT_SENTINEL_Consolidated_Research_Report.pdf](historical/PQC_IoT_SENTINEL_Consolidated_Research_Report.pdf) | Historical consolidated research report, finalized 18 September 2026 |
 
-Expected SHA-256:
+These reports predate later network-denominator corrections and are not substitutes for the final conference paper. Use the current raw-evidence reconstruction and explicit claim boundaries when checking numerical statements.
 
-```text
-9b6b7862cacc96f0b14a8b6789b6c08d5eebcf1344fd9680ce2b195cc35ccaf9
-```
-
-The repository preparation integration can write text files but cannot directly attach the local PDF binary, so this directory records the canonical filename and checksum for the manuscript.
-
-## Study summary
-
-The paper reports:
-
-- two separate approximately 24-hour BL602 campaigns, one using PQC-IoT Sentinel and one using DTLS 1.2;
-- message outcomes, successful-message RTT, hourly variation, and inter-delivery continuity;
-- reconstruction of DTLS setup/recovery outcomes from raw logs;
-- PQC operation timings and DTLS session-establishment timing;
-- binary/BSS/runtime-memory observations with explicit scope limits;
-- a secondary PQC delay/loss study with packet-level corroboration;
-- a measurement-integrity analysis showing why structured telemetry alone can undercount failures.
-
-## Anonymity note
-
-If the target venue is double-blind, do **not** place an identifying GitHub repository or identifying public website URL in the submitted manuscript unless the venue explicitly permits it. This public repository is suitable for author-side archiving, non-anonymous artifact review, or camera-ready release.
-
-## Live evidence portal
-
-https://pqcsecrity.live/evidence
+When the final PDF is supplied, add it here and regenerate the public integrity manifest. Do not rename a historical report to imply it is the missing manuscript.

@@ -1,0 +1,16 @@
+run_id=random_loss_10pct_official_20260927T095439Z
+analysis_window_size=1000
+first_sequence=123659
+last_sequence=124658
+delivered=1000
+failed=0
+retry_events=93
+successful_retry_recoveries=87
+bench_retransmissions=93
+attempt_distribution=1:913,2:81,3:6
+rtt_mean_ms=801.753000
+rtt_median_ms=129.500000
+rtt_p95_ms=6535.350000
+rtt_p99_ms=6868.210000
+rtt_min_ms=82
+rtt_max_ms=13460

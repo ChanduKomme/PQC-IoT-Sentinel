@@ -1,0 +1,83 @@
+[
+  {
+    "path": "evidence/bundles/PQC_24H_FINAL_PUBLIC.tar.xz",
+    "files": 11,
+    "bytes": 11705288,
+    "sha256": "c530dc2df52fd1df1f7fcadda7fc062ca2f47581635cbe730c336de7c6a6d1a9",
+    "extracted_roots": [
+      "PQC_24H_FINAL"
+    ]
+  },
+  {
+    "path": "evidence/bundles/DTLS_24H_FINAL_PUBLIC.tar.gz",
+    "files": 11,
+    "bytes": 2045749,
+    "sha256": "69802c67ed822a769c099e0fb21b82d1109dcbf566078649839f24f2bcd528ee",
+    "extracted_roots": [
+      "DTLS_24H_FINAL"
+    ]
+  },
+  {
+    "path": "evidence/bundles/DTLS_MEMORY_CHARACTERIZATION_PUBLIC.tar.gz",
+    "files": 6,
+    "bytes": 14342,
+    "sha256": "020f2cbe8476e4487e83d67782bd705fde1b6684b4ea1159f5c2a6fd1e4e5054",
+    "extracted_roots": [
+      "DTLS_MEMORY_CHARACTERIZATION_20260918"
+    ]
+  },
+  {
+    "path": "evidence/bundles/baseline_official_20260926T164106Z.tar.gz",
+    "files": 21,
+    "bytes": 1783126,
+    "sha256": "a8c1220f0cdb35c4781cd00894204a087e74403440458c8ec5aaf2fa0675c083",
+    "extracted_roots": [
+      "PQC_NETWORK_RESILIENCE_20260919"
+    ]
+  },
+  {
+    "path": "evidence/bundles/delay_200ms_official_20260926T220956Z.tar.gz",
+    "files": 27,
+    "bytes": 1846387,
+    "sha256": "be5fdc61c83d0cfc1ec0a9ca71bc3a5fff51322e4d2d7e8de319a9a1e2552919",
+    "extracted_roots": [
+      "PQC_NETWORK_RESILIENCE_20260919"
+    ]
+  },
+  {
+    "path": "evidence/bundles/random_loss_10pct_official_20260927T095439Z.tar.gz",
+    "files": 29,
+    "bytes": 1779055,
+    "sha256": "b6bd1936f898a8d0987315b06d7dfe9783dd9001e5f575377395e34f4daf4877",
+    "extracted_roots": [
+      "PQC_NETWORK_RESILIENCE_20260919"
+    ]
+  },
+  {
+    "path": "evidence/bundles/targeted_loss_20pct_official_20260927T113038Z.tar.gz",
+    "files": 28,
+    "bytes": 1806493,
+    "sha256": "e8c56860dc326201f907627ef483ee06605d5530711cc9cf3ef8ee76af832838",
+    "extracted_roots": [
+      "PQC_NETWORK_RESILIENCE_20260919"
+    ]
+  },
+  {
+    "path": "evidence/bundles/targeted_loss_50pct_official_20260927T135247Z.tar.gz",
+    "files": 29,
+    "bytes": 1636655,
+    "sha256": "079ace0fbc0db0151c883edb7659150f76564cef9569e0294cb4ba00a0753005",
+    "extracted_roots": [
+      "PQC_NETWORK_RESILIENCE_20260919"
+    ]
+  },
+  {
+    "path": "evidence/bundles/NETWORK_DIAGNOSTICS_PUBLIC.tar.gz",
+    "files": 74,
+    "bytes": 4925352,
+    "sha256": "18e981836ff11e8a62490b8c9a2e78bd090a0ead9eb43bf53dca4ab9c5c8e906",
+    "extracted_roots": [
+      "PQC_NETWORK_RESILIENCE_20260919"
+    ]
+  }
+]

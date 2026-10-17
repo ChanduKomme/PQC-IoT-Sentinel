@@ -1,0 +1,118 @@
+{
+  "source_changes": [
+    {
+      "path": "source/project/README.md",
+      "change": "documentation corrected for actual public distribution",
+      "input_sha256": "30eb9d97784b34bdcaea915f78a5fd121b2218f4135e1864b46a6ecb93211f4f",
+      "output_sha256": "cadc4fb38051e15447e414fb6684a12055cda31ba9d34ef4911cdb4de1478acd"
+    },
+    {
+      "path": "source/project/Receiver/Receiver/include/build_config.h",
+      "change": "local credentials removed; provision new credentials",
+      "input_sha256": "63eaddfa4f57883c66b002373960c3f300f012c7eb238711373aab9cfe7e5783",
+      "output_sha256": "1ab6751582442d82b5763378b6a46144aeca147cf1cea6c323b0f272b78157cc"
+    },
+    {
+      "path": "source/project/Receiver/Receiver/include/sender_auth_registry.h",
+      "change": "local credentials removed; provision new credentials",
+      "input_sha256": "863c6904d427c32927ef75579998f1ea7bd46c9c137ea61f8055d14adbd6e243",
+      "output_sha256": "3dc8fabe6a694ecd20c02027188b7a312e275ba6383c9a4aa52d1819d158372a"
+    },
+    {
+      "path": "source/project/Receiver/Receiver/include/wifi.h",
+      "change": "local credentials removed; provision new credentials",
+      "input_sha256": "93bb388722e1666e228b3bdc0a0ceac394a5fe6721bd94f38924d0977360331c",
+      "output_sha256": "1f33fc2c22932ab824eb2e91d08624ed4dcde04c258485e884444aea5e950843"
+    },
+    {
+      "path": "source/project/experiments/dtls_baseline/common/dtls_dev_credentials.h",
+      "change": "embedded DTLS private key removed",
+      "input_sha256": "d1ad6d5956f77170fa002ec3adfdbc6ba4859ff89bb711286aa2d12d578b3d4b",
+      "output_sha256": "6f1336f08b9eba4176c73db793d5b86855f76244429e746f8c6dd5dbe430c019"
+    },
+    {
+      "path": "source/project/experiments/dtls_baseline/dtls_receiver/dtls_receiver/include/build_config.h",
+      "change": "local credentials removed; provision new credentials",
+      "input_sha256": "197e88fae587a8e18f35088ab36c6e186d8d52e11ea96b203cbe3cf6ac393429",
+      "output_sha256": "dc50d9a1631c83f96da8b149ff29f2be478ff4f06d9b416fc7086a08780f7130"
+    },
+    {
+      "path": "source/project/experiments/dtls_baseline/dtls_receiver/dtls_receiver/include/dtls_dev_credentials.h",
+      "change": "embedded DTLS private key removed",
+      "input_sha256": "d1ad6d5956f77170fa002ec3adfdbc6ba4859ff89bb711286aa2d12d578b3d4b",
+      "output_sha256": "6f1336f08b9eba4176c73db793d5b86855f76244429e746f8c6dd5dbe430c019"
+    },
+    {
+      "path": "source/project/experiments/dtls_baseline/dtls_sender/dtls_sender/include/build_config.h",
+      "change": "local credentials removed; provision new credentials",
+      "input_sha256": "5377681025d2693fe4952dd4bb13abeaa9846da09a31d195decb0369ef6aa555",
+      "output_sha256": "dac48231204dab75447bfc263d9090d2609b7a097771e75d79842ff2bcb0bdc3"
+    },
+    {
+      "path": "source/project/experiments/dtls_baseline/dtls_sender/dtls_sender/include/dtls_dev_credentials.h",
+      "change": "embedded DTLS private key removed",
+      "input_sha256": "d1ad6d5956f77170fa002ec3adfdbc6ba4859ff89bb711286aa2d12d578b3d4b",
+      "output_sha256": "6f1336f08b9eba4176c73db793d5b86855f76244429e746f8c6dd5dbe430c019"
+    },
+    {
+      "path": "source/project/sender/sender/include/build_config.h",
+      "change": "local credentials removed; provision new credentials",
+      "input_sha256": "efd81c3b3d5e8ed8f93b8b2be76b4d983ef55c0216f741412001a1fc28e3aabf",
+      "output_sha256": "1ab6751582442d82b5763378b6a46144aeca147cf1cea6c323b0f272b78157cc"
+    },
+    {
+      "path": "source/project/sender/sender/include/sender_auth_key.h",
+      "change": "local credentials removed; provision new credentials",
+      "input_sha256": "852a970565466ab6d84a90f2da1531255f27a98ee007ff67f28de3b60dec0fb7",
+      "output_sha256": "ac1a83eba05c47fb86cc940adbbcec1827183896339fad9e32acb40a12434df2"
+    },
+    {
+      "path": "source/project/sender/sender/include/wifi.h",
+      "change": "local credentials removed; provision new credentials",
+      "input_sha256": "97298820f34ded398e4258ee7cb0597e195f2e3a4568a569aba4f72faf728fb9",
+      "output_sha256": "7c971f3caa98717eb7d70749ad62560a3ef94a827f9ad8b58fd446a895006adf"
+    }
+  ],
+  "evidence_redactions": [
+    {
+      "path": "DTLS_24H_FINAL/live_bridge_console.log",
+      "input_sha256": "dc42291016c389a432b87504a9190d924b83b162df4dad1f9d50ed27ef4a49be",
+      "output_sha256": "abf0e6ec4cef251564021091fc7e167288fb9c79e7f6f7049398cc71c65ad3b0",
+      "change": "credential string redacted; numerical records otherwise retained"
+    },
+    {
+      "path": "DTLS_24H_FINAL/receiver.log",
+      "input_sha256": "e0015286c1040417f9c61c63ad1e805066662fc20ff9b41fc77782630176c377",
+      "output_sha256": "e248f2875cfbc766ebb80784fc03c8ee1ca21e1e7d6df77d66040c057dde01da",
+      "change": "credential string redacted; numerical records otherwise retained"
+    },
+    {
+      "path": "DTLS_24H_FINAL/sender.log",
+      "input_sha256": "2878854e9efe53788765b02ed49e4c6051d858ae98585ed115334b9f4b8f693c",
+      "output_sha256": "e830544fbab36207a11d5e585d001a2503b0a22ed6e4ec6caa1f235dc17f5cab",
+      "change": "credential string redacted; numerical records otherwise retained"
+    },
+    {
+      "path": "PQC_NETWORK_RESILIENCE_20260919/01_baseline/baseline_20260919T210153Z/receiver/serial.log",
+      "input_sha256": "10c3ba52f6bdf97f9d44e423e550323cb297dee8662cc75a6e23f22da661cf6c",
+      "output_sha256": "d0e20eecf96d02105da38e4c082f3148b80aff43dcdbc259af02d83aee3bbfa9",
+      "change": "credential string redacted; numerical records otherwise retained"
+    },
+    {
+      "path": "PQC_NETWORK_RESILIENCE_20260919/01_baseline/baseline_20260919T210153Z/sender/serial.log",
+      "input_sha256": "2535a12098e7d563c09a4c10a2d37f2a30fb2c53c7c60b018e3b42c2e16fd040",
+      "output_sha256": "b969221451c77bc7756830fe2ad536bb248d641f25a74635e43ade665069079a",
+      "change": "credential string redacted; numerical records otherwise retained"
+    }
+  ],
+  "omitted_categories": [
+    "local .env files",
+    "provisioning state",
+    "compiled firmware/ELF images",
+    "SDK build directories",
+    "dependency caches",
+    "source backups",
+    "credential-bearing diagnostics"
+  ],
+  "raw_logs_modified": true
+}

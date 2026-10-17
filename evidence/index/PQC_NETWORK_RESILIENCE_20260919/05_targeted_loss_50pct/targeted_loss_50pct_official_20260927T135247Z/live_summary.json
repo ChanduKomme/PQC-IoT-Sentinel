@@ -1,0 +1,20 @@
+{
+  "experiment_id": "pqc-experiment",
+  "run_id": "targeted_loss_50pct_official_20260927T135247Z",
+  "network_profile": "targeted_loss_50pct",
+  "configured_delay_ms": 0.0,
+  "configured_jitter_ms": 0.0,
+  "configured_loss_pct": 50.0,
+  "impairment_direction": "sender_to_receiver",
+  "impairment_target": "receiver_udp5683_only",
+  "captured_firmware_events": 10640,
+  "derived_bench_events": 2315,
+  "queued": 12955,
+  "splunk_sent": 12955,
+  "splunk_failed": 0,
+  "invalid_or_mismatched": 2,
+  "host_event_hec_failed": 0,
+  "host_capture_id": "cf855524913547e68a3163f48f5c15d9",
+  "capture_uptime_seconds": 19669.178,
+  "ended_utc": "2026-09-27T19:21:49.186577+00:00"
+}

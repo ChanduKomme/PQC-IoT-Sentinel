@@ -1,0 +1,41 @@
+utc=2026-09-26T16:43:56+00:00
+profile=baseline_official_20260926T164106Z
+hostname=chandu
+kernel=Linux 7.0.0-1017-raspi aarch64 GNU/Linux
+
+=== IP ADDRESSES ===
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+eth0             DOWN           
+wlan0            UP             192.168.0.97/24 fe80::b2df:5d89:e279:37c6/64 
+ap0              UP             10.77.0.1/24 
+
+=== ROUTES ===
+default via 192.168.0.1 dev wlan0 proto dhcp src 192.168.0.97 metric 600 
+10.77.0.0/24 dev ap0 proto kernel scope link src 10.77.0.1 
+192.168.0.0/24 dev wlan0 proto kernel scope link src 192.168.0.97 metric 600 
+
+=== IPV4 FORWARDING ===
+net.ipv4.ip_forward = 1
+
+=== AP0 TC ===
+qdisc fq_codel 8002: root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64 
+ Sent 83508214 bytes 204028 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+  maxpacket 0 drop_overlimit 0 new_flow_count 0 ecn_mark 0
+  new_flows_len 0 old_flows_len 0
+
+=== WLAN0 TC ===
+qdisc fq_codel 8009: root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64 
+ Sent 1336314 bytes 4772 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+  maxpacket 2103 drop_overlimit 0 new_flow_count 1 ecn_mark 0
+  new_flows_len 0 old_flows_len 0
+
+=== FORWARD RULES ===
+Chain FORWARD (policy ACCEPT 400K packets, 120M bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+=== NAT POSTROUTING ===
+Chain POSTROUTING (policy ACCEPT 69779 packets, 6203K bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+1        6   246 MASQUERADE  all  --  *      wlan0   10.77.0.0/24         192.168.0.196       

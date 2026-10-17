@@ -1,0 +1,8 @@
+profile=targeted_loss_20pct_official_20260927T113038Z
+duration_seconds=14400
+capture_started_utc=2026-09-27T11:32:00+00:00
+filter=udp port 5683
+interface=any
+capture_ended_utc=2026-09-27T13:36:39+00:00
+tcpdump_exit_code=0
+pcap_packets=12722

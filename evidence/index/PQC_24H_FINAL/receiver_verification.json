@@ -1,0 +1,15 @@
+{
+  "experiment_id": "pqc-experiment",
+  "event": "MSG_DECRYPTED",
+  "expected_min": 1,
+  "expected_max": null,
+  "checks": {
+    "receiver_log": {
+      "matching_evidence": 263131,
+      "count": 32789,
+      "pass": true
+    }
+  },
+  "pass": true,
+  "scope": "event counts only; campaign completeness and physical resistance are not established"
+}

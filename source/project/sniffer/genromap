@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+MAX_MAKE_JOBS=${MAX_MAKE_JOBS:-2}
+case "$MAX_MAKE_JOBS" in *[!0-9]*|""|0) echo "MAX_MAKE_JOBS must be a positive integer" >&2; exit 2;; esac
+exec make CONFIG_CHIP_NAME=BL602 CONFIG_LINK_ROM=1 CONFIG_INCLUDE_COAP=1 -j"$MAX_MAKE_JOBS"

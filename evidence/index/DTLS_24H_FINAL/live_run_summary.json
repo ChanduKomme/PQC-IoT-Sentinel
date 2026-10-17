@@ -1,0 +1,24 @@
+{
+  "run_id": "DTLS-experiment-final",
+  "start_utc": "2026-09-17T13:48:52.251+00:00",
+  "elapsed_seconds": 86400.81981716701,
+  "duration_hours": 24.000227726990836,
+  "sender": {
+    "messages_success": 42346,
+    "messages_failed": 2,
+    "handshakes_success": 143,
+    "handshakes_failed": 0,
+    "session_summaries": 142,
+    "serial_lines": 45035
+  },
+  "receiver": {
+    "messages_success": 42346,
+    "messages_failed": 0,
+    "handshakes_success": 143,
+    "handshakes_failed": 0,
+    "session_summaries": 0,
+    "serial_lines": 44590
+  },
+  "splunk_sent_events": 91401,
+  "splunk_failed_events": 0
+}

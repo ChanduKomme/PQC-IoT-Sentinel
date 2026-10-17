@@ -1,0 +1,20 @@
+{
+  "experiment_id": "pqc-experiment",
+  "run_id": "delay_200ms_20260926T215306Z",
+  "network_profile": "delay_200ms",
+  "configured_delay_ms": 200.0,
+  "configured_jitter_ms": 0.0,
+  "configured_loss_pct": 0.0,
+  "impairment_direction": "sender_to_receiver",
+  "impairment_target": "pi1_wlan0_egress",
+  "captured_firmware_events": 0,
+  "derived_bench_events": 0,
+  "queued": 0,
+  "splunk_sent": 0,
+  "splunk_failed": 0,
+  "invalid_or_mismatched": 0,
+  "host_event_hec_failed": 0,
+  "host_capture_id": "12820c189b9e40e4b23f577283fe5e98",
+  "capture_uptime_seconds": 5.024,
+  "ended_utc": "2026-09-26T21:55:07.680436+00:00"
+}

@@ -1,0 +1,15 @@
+run_id=targeted_loss_20pct_official_20260927T113038Z
+network_profile=targeted_loss_20pct
+configured_loss_pct=20
+impairment_target=receiver_udp5683_only
+analysis_window=first_1000_terminal_outcomes_fully_inside_pi_pcap
+analysis_window_size=1000
+delivered=991
+failed=9
+first_sequence=125012
+last_sequence=126008
+first_unix=1790508732.902763
+last_unix=1790516187.5278468
+pcap_start_unix=1790508720.0
+pcap_end_unix=1790516199.0
+window_fully_inside_pcap=yes

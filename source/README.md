@@ -1,47 +1,11 @@
-# Sanitized public source snapshot
+# Sanitized source snapshot
 
-The Version 1 sanitized source archive is expected at:
+Browse [project/](project/) or download [PQC_IoT_SENTINEL_V1_PUBLIC_SOURCE.zip](PQC_IoT_SENTINEL_V1_PUBLIC_SOURCE.zip). The ZIP contains the same source tree, with one `PQC_IoT_SENTINEL_V1_PUBLIC_SOURCE/` top-level directory.
 
-```text
-source/PQC_IoT_SENTINEL_V1_PUBLIC_SOURCE.zip
-```
+The source includes PQC sender/receiver firmware, the DTLS reference, CoAP/state helpers, KEM-derived code, host capture/provisioning tools, network-emulation utilities, dashboard and Splunk integration sources, and existing host checks. External SDK/toolchains and installed dependencies are not bundled.
 
-Expected SHA-256:
+Local Wi-Fi settings are placeholders, provisioned HMAC keys are zeroed/disabled, and the embedded DTLS private key is removed. New credentials are required before deployment. See [BUILD_AND_PROVISION.md](BUILD_AND_PROVISION.md) and [the exact sanitization ledger](../artifact/SANITIZATION.json).
 
-```text
-3335e0706a920db0a282023b07e0db95b464c8d979ad793b0f4953fad693e272
-```
+The inherited application release label is 2.0.0; this does not denote a second research campaign. This repository's evidence release is Conference Version 1. Historical source-to-flashed-image provenance is incomplete, and a sanitized rebuild will have a different identity from the archived image.
 
-## Contents
-
-The prepared archive contains the Version 1 source project and supporting material, including application firmware, host tooling, DTLS baseline code, dashboard/integration code, network-emulation helpers, validation notes, and analysis documentation.
-
-## Sanitization
-
-The public package excludes or replaces sensitive local material, including:
-
-- real Wi-Fi credentials;
-- Splunk HEC tokens/passwords;
-- provisioned per-device authentication secrets;
-- the DTLS development server private key;
-- local `.env` content containing secrets.
-
-The archive should still be reviewed before redistribution in a formal artifact process, especially for third-party license notices and locally generated development fixtures.
-
-## Historical provenance limitation
-
-This source snapshot supports code inspection and reproduction work, but Version 1 does not claim a complete historical source-to-flashed-binary build lock for every archived experiment. The manuscript keeps that limitation explicit.
-
-## Rebuilding new experiments
-
-For a new campaign, freeze and record:
-
-- source commit;
-- SDK/dependency revisions;
-- compiler/toolchain version and digest;
-- build flags and generated configuration;
-- firmware/ELF hashes;
-- flashed board role/build identity;
-- run ID and analysis version.
-
-New experiments should be published as a later artifact version rather than silently replacing Version 1 evidence.
+Loose `sender/*.log` and `sender/*.jsonl` files are inherited development snapshots. The primary publication evidence is identified by the official run bundles and experiment index; these loose snapshots are not additional endurance campaigns.

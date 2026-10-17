@@ -1,44 +1,21 @@
-# Reviewer quick guide
+# Reviewer guide
 
-## Paper
+This is the public Version 1 artifact for *Beyond the Handshake: A 24-Hour Study of Post-Quantum Messaging and DTLS on BL602*. The final conference PDF was not in the supplied archives; [paper/README.md](../paper/README.md) states that gap explicitly.
 
-**Beyond the Handshake: A 24-Hour Study of Post-Quantum Messaging and DTLS on BL602**
+## A ten-minute route
 
-## What to verify first
+1. Read the [README result tables](../README.md) and [comparison boundaries](../docs/MEASUREMENT_NOTES.md).
+2. Inspect the [claim-to-evidence matrix](CLAIM_EVIDENCE_MATRIX.md) to locate the record behind each central claim.
+3. Run the three [reproduction commands](REPRODUCIBILITY.md). No hardware or service account is required.
+4. Inspect [raw handshake errors](../results/derived/dtls_handshake_errors.csv), [network completed cycles](../results/derived/network_completed_cycles.csv), and [retry outcomes](../results/derived/retry_outcomes.csv).
+5. Read the [experiment exclusions](EXPERIMENT_INDEX.md), [sanitization record](SANITIZATION.json), and [provenance caveat](FIRMWARE_PROVENANCE.md).
 
-1. Read the root `README.md` for the study boundary and headline results.
-2. Inspect `results/primary_24h.csv` for the primary 24-hour comparison.
-3. Inspect `results/network_resilience.csv` for the secondary delay/loss study.
-4. Read `artifact/ARTIFACT_SCOPE.md` before interpreting any performance ratio.
-5. Read `artifact/REPRODUCIBILITY.md` for evidence and source-to-binary limitations.
-6. Use the live website only as a supporting evidence portal: https://pqcsecrity.live/evidence
+## What the artifact supports
 
-## Core claims
+The archived runs support a descriptive complete-system comparison, sustained-operation observations, recovery/continuity analysis, and a reconstruction of telemetry denominator gaps. The source helps explain what each implementation is intended to do. These are separate evidence classes.
 
-The artifact supports four main empirical points:
+## What remains open
 
-- both evaluated BL602 configurations operated for approximately 24 hours under their recorded workloads;
-- established DTLS application exchanges were much shorter than the PQC application's protected-data exchange in these implementations, but the systems do not implement equivalent security/lifecycle work;
-- service continuity and setup/recovery behavior can differ from successful-message RTT distributions;
-- structured telemetry can omit real failure paths, so raw logs, firmware semantics, and packet evidence must be reconciled before drawing reliability conclusions.
+The principal design has one campaign per profile, unequal application authentication/persistence semantics, and incomplete historical source-to-binary locking. A matched classical/PQC application, independent endurance repetitions, standardized KEM validation, and physical crash testing are future work. The artifact does not turn those omissions into verified claims.
 
-## Important non-claims
-
-Please do not interpret this artifact as:
-
-- a proof that DTLS is universally faster or better than PQC;
-- a primitive-only KEM-versus-ECDHE benchmark;
-- a FIPS 203 conformance claim;
-- a formal security proof;
-- an energy-efficiency evaluation;
-- a statistically replicated multi-deployment study.
-
-## Network study note
-
-At 20% and 50% targeted loss, completed-cycle delivery differs from the original structured-terminal-event percentage because raw-log reconstruction found metadata-fetch failures that completed without a structured terminal failure record.
-
-The sealed original analyses are preserved conceptually as the **structured-terminal-event view**. The corrected figures are the **completed-cycle view**.
-
-## Artifact integrity
-
-See `artifact/SHA256SUMS.txt` for the conference PDF and sanitized source archive identities.
+The public GitHub account and live website identify the author. Use the target venue's artifact submission mechanism if anonymous review is required.

@@ -1,27 +1,13 @@
-# Local secrets and credentials
-.env
-.env.*
-!.env.example
-*.pem
-*.key
-*.p12
-*.pfx
-
-# Build outputs
-build/
-build_out/
-*.bin
-*.elf
-*.map
-
-# Python / Node
+# Local analysis output and Python caches
+.reproduce/
 __pycache__/
 *.pyc
 .venv/
-node_modules/
-
-# Local experiment working files
-*.pcap
-*.pcapng
-*.log
-.DS_Store
+# Local provisioning and generated builds
+.env
+.env.*
+!.env.example
+**/build_out/
+**/node_modules/
+**/frontend/dist/
+**/pi2_trust_authority/state/

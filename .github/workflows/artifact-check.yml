@@ -1,0 +1,24 @@
+name: Artifact verification
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reconstruct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify published file hashes
+        run: python3 analysis/verify_integrity.py
+      - name: Extract verified evidence
+        run: python3 analysis/extract_evidence.py
+      - name: Reconstruct raw-data results
+        run: python3 analysis/reproduce.py --check
+      - name: Run existing host source checks
+        run: python3 source/project/tools/run_host_checks.py --report .reproduce/host_checks.json

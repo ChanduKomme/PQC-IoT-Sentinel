@@ -1,0 +1,6 @@
+condition,run_id,delivered,structured_terminal_outcomes,structured_delivery_pct,metadata_failures_omitted_from_structured_totals,completed_cycles,completed_cycle_delivery_pct,pk_fetch_failures,protected_data_retry_exhaustions,extra_data_transmissions,capture_forward_missing_pct
+01_baseline,baseline_official_20260926T164106Z,1000,1000,100.0,0,1000,100.0,0,0,0,0.0
+02_delay_200ms,delay_200ms_official_20260926T220956Z,1000,1000,100.0,0,1000,100.0,0,0,0,0.03183699458771092
+03_random_loss_10pct,random_loss_10pct_official_20260927T095439Z,1000,1000,100.0,0,1000,100.0,0,0,93,9.552418143586662
+04_targeted_loss_20pct,targeted_loss_20pct_official_20260927T113038Z,991,1000,99.1,4,1004,98.70517928286853,3,6,238,19.946524064171122
+05_targeted_loss_50pct,targeted_loss_50pct_official_20260927T135247Z,739,1000,73.9,126,1126,65.63055062166963,162,99,640,50.53554040895813

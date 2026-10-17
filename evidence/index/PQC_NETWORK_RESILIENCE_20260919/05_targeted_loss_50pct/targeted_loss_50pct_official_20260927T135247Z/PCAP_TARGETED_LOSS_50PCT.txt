@@ -1,0 +1,14 @@
+run_id=targeted_loss_50pct_official_20260927T135247Z
+configured_loss_pct=50
+impairment_target=receiver_udp5683_only
+ap0_in_sender_to_receiver=5135
+wlan0_out_sender_to_receiver=2540
+inferred_forward_drops=2595
+empirical_forward_loss_pct=50.535540
+wlan0_in_receiver_to_sender=2540
+ap0_out_receiver_to_sender=2540
+qdisc_target_transmitted=2566
+qdisc_target_dropped=2612
+qdisc_target_offered=5178
+qdisc_target_observed_loss_pct=50.444187
+normal_fq_codel_dropped=0

@@ -1,0 +1,20 @@
+utc=2026-09-19T21:24:21+00:00
+profile=baseline_20260919T210153Z
+hostname=chandu
+kernel=Linux 7.0.0-1017-raspi aarch64 GNU/Linux
+
+=== IP ADDRESSES ===
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+eth0             DOWN           
+wlan0            UP             192.168.0.97/24 fe80::b2df:5d89:e279:37c6/64 
+ap0              UP             10.77.0.1/24 
+
+=== ROUTES ===
+default via 192.168.0.1 dev wlan0 proto dhcp src 192.168.0.97 metric 600 
+10.77.0.0/24 dev ap0 proto kernel scope link src 10.77.0.1 
+192.168.0.0/24 dev wlan0 proto kernel scope link src 192.168.0.97 metric 600 
+
+=== IPV4 FORWARDING ===
+net.ipv4.ip_forward = 1
+
+=== AP0 TC ===

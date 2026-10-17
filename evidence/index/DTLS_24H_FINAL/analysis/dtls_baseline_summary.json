@@ -1,0 +1,65 @@
+{
+  "profile": "DTLS-1.2/ECDHE-P-256/ECDSA/AES-256-CCM",
+  "sender_samples": 42348,
+  "sender_success": 42346,
+  "sender_failed": 2,
+  "receiver_samples": 42346,
+  "receiver_success": 42346,
+  "receiver_failed": 0,
+  "sender_handshake_ms": {
+    "count": 143,
+    "mean": 1926.6783216783217,
+    "median": 1743.0,
+    "stdev": 2171.525402073548,
+    "min": 1722.0,
+    "max": 27712.0,
+    "p95": 1763.8
+  },
+  "receiver_handshake_ms": {
+    "count": 143,
+    "mean": 1818.4125874125873,
+    "median": 1731.0,
+    "stdev": 1033.1353028161163,
+    "min": 1712.0,
+    "max": 14086.0,
+    "p95": 1746.0
+  },
+  "scope": "RTT uses successful sender records only; receiver_process excludes DTLS read/decrypt. Session IDs are local to each log.",
+  "rtt_ms": {
+    "count": 42346,
+    "mean": 11.978746516790252,
+    "median": 10.0,
+    "stdev": 27.444202400680112,
+    "min": 8.0,
+    "max": 2458.0,
+    "p95": 18.0
+  },
+  "receiver_process_ms": {
+    "count": 42346,
+    "mean": 0.1027251688471166,
+    "median": 0.0,
+    "stdev": 0.3042248081025579,
+    "min": 0.0,
+    "max": 3.0,
+    "p95": 1.0
+  },
+  "coap_len": {
+    "count": 42346,
+    "mean": 36.0,
+    "median": 36.0,
+    "stdev": 0.0,
+    "min": 36.0,
+    "max": 36.0,
+    "p95": 36.0
+  },
+  "estimated_dtls_record_len": {
+    "count": 42342,
+    "mean": 72.9984412639932,
+    "median": 73.0,
+    "stdev": 0.3207437862982165,
+    "min": 7.0,
+    "max": 73.0,
+    "p95": 73.0
+  },
+  "excluded_warmup_runs_per_session": 0
+}

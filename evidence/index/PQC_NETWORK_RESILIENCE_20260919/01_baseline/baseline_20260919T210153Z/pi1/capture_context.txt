@@ -1,0 +1,9 @@
+profile=baseline_20260919T210153Z
+duration_seconds=3600
+capture_started_utc=2026-09-19T21:04:04+00:00
+filter=udp port 5683
+interface=any
+manual_finalization_utc=2026-09-19T21:26:55+00:00
+run_status=ABORTED
+abort_reason=sender_wifi_association_failure
+pcap_packets=246

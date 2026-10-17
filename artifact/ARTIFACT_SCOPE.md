@@ -1,35 +1,15 @@
-# Artifact scope and claim boundaries
+# Artifact scope
 
-## Included claims
+Version 1 packages supplied historical evidence and a sanitized source snapshot. It includes two primary 24-hour runs, five official PQC network windows, excluded/diagnostic attempts, a separate DTLS memory characterization, screenshots, historical reports, analysis scripts, derived tables, figures, hashes, and reviewer documentation.
 
-Version 1 supports an implementation-level systems study of two BL602 security profiles and a secondary PQC network-resilience study. It supports statements about recorded application behavior, measured timing boundaries, packet-capture observations, persistence ordering in inspected source, and telemetry/accounting discrepancies described in the manuscript.
+The original supplied uploads are identified in [INPUT_ARCHIVES.json](INPUT_ARCHIVES.json). They are not published verbatim because they contain local configuration, credentials, dependency caches and compiled images. Public bundles have their own hashes in [BUNDLES.json](BUNDLES.json).
 
-## Not claimed
+The source snapshot's inherited software-release label “2.0.0” is not a claim that Version 2 research experiments were performed. “Conference Version 1” identifies this evidence release; these are different version namespaces.
 
-This artifact does **not** establish:
+## Publication differences
 
-- FIPS 203 / ML-KEM conformance;
-- cryptographic-module certification;
-- a formal proof of the composed protocol;
-- side-channel, fault-injection, entropy-quality, or physical-tamper resistance;
-- secure boot or hardware anti-rollback guarantees;
-- exactly-once physical actuation;
-- fleet-scale behavior;
-- energy efficiency;
-- universal PQC-vs-DTLS performance superiority.
+[SANITIZATION.json](SANITIZATION.json) lists source changes and every redacted evidence file. The DTLS Wi-Fi driver printed the local pre-shared Wi-Fi password; public copies replace that credential string while preserving timing and outcome records. Two aborted network baseline logs also require the same redaction. Official network run contents and their sealed manifests remain unchanged.
 
-## Comparison boundary
+Compiled images and ELF files are excluded because they can embed credentials. Their filenames, lengths and SHA-256 identities are retained where applicable; original manifests may consequently mention excluded files. These records establish file identity, not complete source-to-flashed-build provenance.
 
-The PQC and DTLS profiles perform different work. Authentication, persistence, key reuse, acknowledgement semantics, and timing endpoints differ. Results characterize the complete recorded implementations; they do not isolate the causal cost of replacing ECDHE with a post-quantum KEM.
-
-## Evidence versions
-
-The network-resilience archive contains original sealed structured-terminal-event analyses. A later audit reconstructs completed cycles from preserved raw serial evidence and source semantics. The corrected cycle-level results are an additional analysis layer, not a rewrite of the sealed evidence.
-
-## Sanitization
-
-The public source archive excludes real local credentials and private key material. Placeholders are used where needed to document configuration paths.
-
-## Versioning
-
-Future matched-security baselines, conformance work, repeated 24-hour campaigns, energy measurements, or redesigned instrumentation should be released as Version 2 or later rather than silently rewriting Version 1 evidence.
+The final conference manuscript is absent. Historical reports are labeled accordingly. No independent experimental data or missing manuscript content has been invented.

@@ -1,0 +1,8 @@
+rotation_result=SUCCESS
+old_key_id=1
+old_message_count=99999
+new_key_id=2
+new_message_count=0
+preserved_last_counter=101213
+new_receiver_fingerprint=07595E1C83A7E673DB316866C78D74470639F9C340C63DC7B756F4284597BE47
+rotation_receiver_sha256=d7b320e894e938f019d53caf0d52cc6fa47025f3bdc0411f5d12da78eae9e4fe

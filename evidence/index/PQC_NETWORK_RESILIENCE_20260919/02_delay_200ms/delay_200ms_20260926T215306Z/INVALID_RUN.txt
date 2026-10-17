@@ -1,0 +1,8 @@
+status=INVALID
+official_run=no
+run_id=delay_200ms_20260926T215306Z
+network_profile=delay_200ms
+reason=collector_terminated_after_startup_with_zero_firmware_events
+captured_firmware_events=0
+terminal_outcomes=0
+notes=Pi capture started, but host collector stopped after approximately five seconds and captured no firmware events. Do not include this attempt in resilience statistics.

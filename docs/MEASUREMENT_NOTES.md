@@ -48,3 +48,11 @@ Packet-capture forward missing fractions describe routed receiver-bound UDP traf
 ## Statistical scope
 
 The primary campaigns are sequential long-running observations, not independent repeated deployments. Tens of thousands of message samples and hourly bins describe within-run behavior; they do not replace independent campaign-level replication.
+
+## Capture-boundary forwarding difference
+
+The delay capture contains 3,141 observed forward inputs and 3,140 observed forwarded outputs, with 3,140 matching reverse inputs/outputs. One request remains at the capture boundary. This is a boundary difference, not evidence that a delay-only profile configured packet loss. The raw-data reconstruction labels capture-wide missing fractions separately from configured impairment.
+
+## Publication redactions
+
+The DTLS Wi-Fi driver printed its local Wi-Fi password on connection/recovery. Public role logs redact that credential string while retaining all BENCH, handshake, timestamps and outcome records. Every changed file's original/public SHA-256 appears in [the redaction ledger](../artifact/SANITIZATION.json). The primary PQC logs and official network logs are unchanged.

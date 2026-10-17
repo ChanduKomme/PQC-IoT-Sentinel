@@ -1,0 +1,265 @@
+{
+  "schema": 1,
+  "quantiles": "linear interpolation, percentile rank (n-1)*p",
+  "primary": [
+    {
+      "profile": "PQC",
+      "host_capture_seconds": 86400.172,
+      "delivered": 32790,
+      "failed": 0,
+      "receiver_successes": 32789,
+      "rtt_ms": {
+        "n": 32790,
+        "mean": 213.83049710277524,
+        "median": 152.0,
+        "p95": 503.0,
+        "p99": 566.0,
+        "maximum": 6810
+      },
+      "max_observed_delivery_gap_s": 15.747372150421143,
+      "crypto_ms": {
+        "kem_ms": {
+          "n": 32790,
+          "mean": 9.243702348276914,
+          "median": 9.0,
+          "p95": 10.0,
+          "p99": 11.0,
+          "maximum": 13
+        },
+        "hkdf_ms": {
+          "n": 32790,
+          "mean": 0.7734370234827691,
+          "median": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "maximum": 3
+        },
+        "aead_ms": {
+          "n": 32790,
+          "mean": 0.6935651113144251,
+          "median": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "maximum": 3
+        }
+      }
+    },
+    {
+      "profile": "DTLS",
+      "host_capture_seconds": 86400.81981716701,
+      "delivered": 42346,
+      "failed": 2,
+      "receiver_successes": 42346,
+      "rtt_ms": {
+        "n": 42346,
+        "mean": 11.978746516790252,
+        "median": 10.0,
+        "p95": 18.0,
+        "p99": 29.55000000000291,
+        "maximum": 2458
+      },
+      "max_observed_delivery_gap_s": 159.1840000152588,
+      "roles": {
+        "sender": {
+          "delivered": 42346,
+          "failed": 2,
+          "successful_handshakes": 143,
+          "raw_handshake_errors": 29,
+          "successful_handshake_ms": {
+            "n": 143,
+            "mean": 1926.6783216783217,
+            "median": 1743,
+            "p95": 1763.8,
+            "p99": 1858.5400000000002,
+            "maximum": 27712
+          }
+        },
+        "receiver": {
+          "delivered": 42346,
+          "failed": 0,
+          "successful_handshakes": 143,
+          "raw_handshake_errors": 2,
+          "successful_handshake_ms": {
+            "n": 143,
+            "mean": 1818.4125874125873,
+            "median": 1731,
+            "p95": 1746.0,
+            "p99": 1780.5800000000006,
+            "maximum": 14086
+          }
+        }
+      },
+      "structured_handshake_failures": {
+        "sender": 0,
+        "receiver": 0
+      }
+    }
+  ],
+  "network": [
+    {
+      "condition": "01_baseline",
+      "run_id": "baseline_official_20260926T164106Z",
+      "delivered": 1000,
+      "structured_terminal_outcomes": 1000,
+      "structured_delivery_pct": 100.0,
+      "metadata_failures_omitted_from_structured_totals": 0,
+      "completed_cycles": 1000,
+      "completed_cycle_delivery_pct": 100.0,
+      "pk_fetch_failures": 0,
+      "protected_data_retry_exhaustions": 0,
+      "rtt_ms": {
+        "n": 1000,
+        "mean": 208.379,
+        "median": 130.0,
+        "p95": 548.0,
+        "p99": 584.01,
+        "maximum": 721
+      },
+      "success_on_attempt": {
+        "1": 1000,
+        "2": 0,
+        "3": 0
+      },
+      "extra_data_transmissions": 0,
+      "packet_counts": {
+        "forward_in": 3021,
+        "forward_out": 3021,
+        "reverse_in": 3021,
+        "reverse_out": 3021
+      },
+      "capture_forward_missing_pct": 0.0
+    },
+    {
+      "condition": "02_delay_200ms",
+      "run_id": "delay_200ms_official_20260926T220956Z",
+      "delivered": 1000,
+      "structured_terminal_outcomes": 1000,
+      "structured_delivery_pct": 100.0,
+      "metadata_failures_omitted_from_structured_totals": 0,
+      "completed_cycles": 1000,
+      "completed_cycle_delivery_pct": 100.0,
+      "pk_fetch_failures": 0,
+      "protected_data_retry_exhaustions": 0,
+      "rtt_ms": {
+        "n": 1000,
+        "mean": 415.208,
+        "median": 337.0,
+        "p95": 748.0,
+        "p99": 796.03,
+        "maximum": 888
+      },
+      "success_on_attempt": {
+        "1": 1000,
+        "2": 0,
+        "3": 0
+      },
+      "extra_data_transmissions": 0,
+      "packet_counts": {
+        "forward_in": 3141,
+        "forward_out": 3140,
+        "reverse_in": 3140,
+        "reverse_out": 3140
+      },
+      "capture_forward_missing_pct": 0.03183699458771092
+    },
+    {
+      "condition": "03_random_loss_10pct",
+      "run_id": "random_loss_10pct_official_20260927T095439Z",
+      "delivered": 1000,
+      "structured_terminal_outcomes": 1000,
+      "structured_delivery_pct": 100.0,
+      "metadata_failures_omitted_from_structured_totals": 0,
+      "completed_cycles": 1000,
+      "completed_cycle_delivery_pct": 100.0,
+      "pk_fetch_failures": 0,
+      "protected_data_retry_exhaustions": 0,
+      "rtt_ms": {
+        "n": 1000,
+        "mean": 801.753,
+        "median": 129.5,
+        "p95": 6535.349999999999,
+        "p99": 6868.21,
+        "maximum": 13460
+      },
+      "success_on_attempt": {
+        "1": 913,
+        "2": 81,
+        "3": 6
+      },
+      "extra_data_transmissions": 93,
+      "packet_counts": {
+        "forward_in": 3329,
+        "forward_out": 3011,
+        "reverse_in": 3011,
+        "reverse_out": 3011
+      },
+      "capture_forward_missing_pct": 9.552418143586662
+    },
+    {
+      "condition": "04_targeted_loss_20pct",
+      "run_id": "targeted_loss_20pct_official_20260927T113038Z",
+      "delivered": 991,
+      "structured_terminal_outcomes": 1000,
+      "structured_delivery_pct": 99.1,
+      "metadata_failures_omitted_from_structured_totals": 4,
+      "completed_cycles": 1004,
+      "completed_cycle_delivery_pct": 98.70517928286853,
+      "pk_fetch_failures": 3,
+      "protected_data_retry_exhaustions": 6,
+      "rtt_ms": {
+        "n": 991,
+        "mean": 1668.9818365287588,
+        "median": 132,
+        "p95": 6912.0,
+        "p99": 13221.7,
+        "maximum": 13483
+      },
+      "success_on_attempt": {
+        "1": 798,
+        "2": 160,
+        "3": 33
+      },
+      "extra_data_transmissions": 238,
+      "packet_counts": {
+        "forward_in": 3740,
+        "forward_out": 2994,
+        "reverse_in": 2994,
+        "reverse_out": 2994
+      },
+      "capture_forward_missing_pct": 19.946524064171122
+    },
+    {
+      "condition": "05_targeted_loss_50pct",
+      "run_id": "targeted_loss_50pct_official_20260927T135247Z",
+      "delivered": 739,
+      "structured_terminal_outcomes": 1000,
+      "structured_delivery_pct": 73.9,
+      "metadata_failures_omitted_from_structured_totals": 126,
+      "completed_cycles": 1126,
+      "completed_cycle_delivery_pct": 65.63055062166963,
+      "pk_fetch_failures": 162,
+      "protected_data_retry_exhaustions": 99,
+      "rtt_ms": {
+        "n": 739,
+        "mean": 4071.7144790257103,
+        "median": 546,
+        "p95": 13300.4,
+        "p99": 13496.12,
+        "maximum": 13767
+      },
+      "success_on_attempt": {
+        "1": 413,
+        "2": 210,
+        "3": 116
+      },
+      "extra_data_transmissions": 640,
+      "packet_counts": {
+        "forward_in": 5135,
+        "forward_out": 2540,
+        "reverse_in": 2540,
+        "reverse_out": 2540
+      },
+      "capture_forward_missing_pct": 50.53554040895813
+    }
+  ]
+}

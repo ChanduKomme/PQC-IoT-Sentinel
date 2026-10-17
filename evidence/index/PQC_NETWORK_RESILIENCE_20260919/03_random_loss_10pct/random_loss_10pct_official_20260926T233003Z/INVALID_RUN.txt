@@ -1,0 +1,23 @@
+status=INVALID_FOR_OFFICIAL_1000
+official_run=no
+run_id=random_loss_10pct_official_20260926T233003Z
+network_profile=random_loss_10pct
+configured_loss_pct=10
+
+target_terminal_outcomes=1000
+delivered_at_target=996
+failed_at_target=4
+retry_events_at_target=123
+
+reason=pi_packet_capture_ended_before_1000_terminal_outcomes
+pi_capture_duration_limit_seconds=3600
+pi_packets_captured=9547
+pi_kernel_drops=0
+
+collector_final_captured_firmware_events=93568
+collector_final_derived_bench_events=23162
+collector_final_splunk_failed=0
+collector_final_invalid_or_mismatched=4
+collector_final_uptime_seconds=36876.409
+
+notes=Application experiment reached 1000 outcomes but Pi packet capture expired before completion. Preserve as diagnostic evidence only and exclude from official random-loss statistics.

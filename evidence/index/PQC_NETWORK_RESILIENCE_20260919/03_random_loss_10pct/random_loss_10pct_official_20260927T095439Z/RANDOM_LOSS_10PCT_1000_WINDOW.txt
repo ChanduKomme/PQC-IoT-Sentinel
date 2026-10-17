@@ -1,0 +1,14 @@
+run_id=random_loss_10pct_official_20260927T095439Z
+network_profile=random_loss_10pct
+configured_loss_pct=10
+analysis_window=first_1000_terminal_outcomes_fully_inside_pi_pcap
+analysis_window_size=1000
+delivered=1000
+failed=0
+first_sequence=123659
+last_sequence=124658
+first_unix=1790502987.9579728
+last_unix=1790507681.6253035
+pcap_start_unix=1790502965.0
+pcap_end_unix=1790507692.0
+window_fully_inside_pcap=yes

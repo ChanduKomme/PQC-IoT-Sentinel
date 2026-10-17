@@ -1,0 +1,39 @@
+DTLS 24-HOUR FINAL EVIDENCE NOTES
+=================================
+
+Run ID: DTLS-experiment-final
+Profile: DTLS-1.2 / ECDHE-P-256 / ECDSA P-256 / AES-256-CCM
+Continuous requested duration: 24 hours
+
+Authoritative live summary:
+- Duration: 24.0002277 h
+- Sender success: 42346
+- Sender failed: 2
+- Receiver success: 42346
+- Receiver failed: 0
+- Successful handshakes: 143
+- Failed handshakes: 0
+- Splunk events sent: 91401
+- Splunk events failed: 0
+
+Observed sender failures:
+- Two ssl_read timeouts, each approximately 5002 ms.
+- One timeout coincided with a Wi-Fi disconnect.
+- The second occurred during a transient high-latency period.
+- Automatic repeated-session recovery resumed communication.
+
+Handshake outliers:
+- Sender maximum handshake: 27712 ms
+- Receiver maximum handshake: 14086 ms
+- Both completed successfully.
+- Median and P95 handshake values remain representative of normal operation.
+
+Serial/telemetry anomaly:
+- Four successful sender records had an empty estimated_dtls_record_len field.
+- One successful sender record contained estimated_dtls_record_len=7.
+- Normal DTLS record estimate is 73 bytes.
+- Raw evidence is retained unchanged.
+- Use median/P95=73 B for representative record-size reporting and disclose anomalies.
+
+Do not interpret receiver_process_ms as DTLS decryption time; its timer starts
+after the DTLS read/decrypt operation.

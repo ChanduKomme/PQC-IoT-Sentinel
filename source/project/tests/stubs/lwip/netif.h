@@ -1,0 +1,1 @@
+/* No network implementation in storage tests. */

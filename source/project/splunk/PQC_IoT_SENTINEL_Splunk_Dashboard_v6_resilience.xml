@@ -1,0 +1,1086 @@
+<dashboard version="1.1" theme="dark">
+  <label>PQC-IoT Sentinel — Research Dashboard v6 + Network Resilience</label>
+
+  <fieldset submitButton="false">
+    <input type="time" token="time_tok">
+      <label>Time Range</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="text" token="exp_tok">
+      <label>Experiment ID</label>
+      <default>pqc-experiment</default>
+    </input>
+    <input type="text" token="net_tok">
+      <label>Network Profile</label>
+      <default>*</default>
+    </input>
+    <input type="text" token="run_tok">
+      <label>Resilience Run ID</label>
+      <default>*</default>
+    </input>
+  </fieldset>
+
+  <!-- ================================================================
+       PROJECT / EXPERIMENT HEADER
+       ================================================================ -->
+  <row>
+    <panel>
+      <html>
+        <div style="padding:14px 18px;border-left:5px solid #53a051;background:#20262e;">
+          <h2 style="margin:0;color:#ffffff;">PQC IoT Sentinel — Live BL602 24-Hour End-to-End Research Run</h2>
+          <p style="margin:7px 0 0 0;color:#b8c7d9;">
+            Sender → CoAP/UDP :5683 → Gateway / Receiver | Kyber512-style KEM + HKDF-SHA-256 + AES-256-CCM + per-device HMAC-SHA-256 + authenticated ACK + persistent replay state.
+          </p>
+          <p style="margin:5px 0 0 0;color:#9fb3c8;">
+            Dashboard scope is filtered by experiment_id. Firmware evidence and host capture-health telemetry are kept separate; event_id and capture_id support deduplication and research traceability.
+          </p>
+        </div>
+      </html>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 1 — END-TO-END KPIs
+       ================================================================ -->
+  <row>
+    <panel>
+      <single>
+        <title>Sender Deliveries</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=MSG_DELIVERED
+| dedup event_id
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0xf8be34","0x53a051"]</option>
+        <option name="rangeValues">[1]</option>
+        <option name="underLabel">authenticated ACK accepted</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Receiver Decryptions</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=MSG_DECRYPTED
+| dedup event_id
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0xf8be34","0x53a051"]</option>
+        <option name="rangeValues">[1]</option>
+        <option name="underLabel">authenticated + decrypted</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Delivery / Decryption Gap</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type IN (MSG_DELIVERED,MSG_DECRYPTED)
+| dedup event_id
+| stats count(eval(event_type="MSG_DELIVERED")) as delivered count(eval(event_type="MSG_DECRYPTED")) as decrypted
+| eval value=abs(delivered-decrypted)
+| table value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x53a051","0xf8be34","0xdc4e41"]</option>
+        <option name="rangeValues">[1,10]</option>
+        <option name="underLabel">absolute event-count difference</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Security / Reliability Failures</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$"
+event_type IN (PK_AUTH_FAIL,DEVICE_AUTH_FAIL,SENDER_AUTH_FAIL,ACK_AUTH_FAIL,AEAD_AUTH_FAIL,KEY_ID_FAIL,REPLAY_REJECT,MALFORMED_COAP_REJECT,SOURCE_BLOCKED,STATE_PERSIST_FAIL,RNG_FAIL,DEVICE_AUTH_KEY_MISSING,SEND_FAILED)
+| dedup event_id
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x53a051","0xf8be34","0xdc4e41"]</option>
+        <option name="rangeValues">[1,10]</option>
+        <option name="underLabel">fail-closed / rejected events</option>
+      </single>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 2 — 24-HOUR RESEARCH RUN STATUS
+       ================================================================ -->
+  <row>
+    <panel>
+      <single>
+        <title>Observed Run Duration</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware
+| dedup event_id
+| stats min(_time) as first_seen max(_time) as last_seen
+| eval seconds=last_seen-first_seen
+| eval value=case(
+    isnull(seconds),"no data",
+    seconds<60,tostring(round(seconds,0))." sec",
+    seconds<3600,tostring(round(seconds/60,1))." min",
+    seconds<86400,tostring(round(seconds/3600,2))." h",
+    true(),tostring(round(seconds/86400,2))." days"
+  )
+| table value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="underLabel">first-to-last firmware event</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>24-Hour Progress</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware
+| dedup event_id
+| stats min(_time) as first_seen max(_time) as last_seen
+| eval seconds=last_seen-first_seen
+| eval value=if(isnull(seconds),0,round(if(seconds>=86400,100,(seconds/86400)*100),2))
+| table value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="unit">%</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0xf8be34","0x0099e0","0x53a051"]</option>
+        <option name="rangeValues">[50,99.99]</option>
+        <option name="underLabel">elapsed time toward 24 h</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Sender Final Success Rate</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware event_type IN (MSG_DELIVERED,SEND_FAILED)
+| dedup event_id
+| stats count(eval(event_type="MSG_DELIVERED")) as delivered count(eval(event_type="SEND_FAILED")) as failed
+| eval attempts=delivered+failed
+| eval value=if(attempts=0,0,round((delivered/attempts)*100,3))
+| table value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="unit">%</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0xdc4e41","0xf8be34","0x53a051"]</option>
+        <option name="rangeValues">[99,99.99]</option>
+        <option name="underLabel">delivered / terminal sender outcomes</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>End-to-End Match</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware event_type IN (MSG_DELIVERED,MSG_DECRYPTED)
+| dedup event_id
+| stats count(eval(event_type="MSG_DELIVERED")) as delivered count(eval(event_type="MSG_DECRYPTED")) as decrypted
+| eval hi=if(delivered>=decrypted,delivered,decrypted), lo=if(delivered<=decrypted,delivered,decrypted)
+| eval value=if(hi=0,0,round((lo/hi)*100,3))
+| table value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="unit">%</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0xdc4e41","0xf8be34","0x53a051"]</option>
+        <option name="rangeValues">[99,99.99]</option>
+        <option name="underLabel">delivery/decryption parity</option>
+      </single>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 2B — SEQUENCE / RETRIES / HOST CAPTURE QUALITY
+       ================================================================ -->
+  <row>
+    <panel>
+      <single>
+        <title>Latest Successful Sequence</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware event_type IN (MSG_DELIVERED,MSG_DECRYPTED)
+| stats max(sequence) as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="underLabel">persistent protocol sequence</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Retries</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware event_type=MSG_RETRY
+| dedup event_id
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x53a051","0xf8be34","0xdc4e41"]</option>
+        <option name="rangeValues">[1,100]</option>
+        <option name="underLabel">send errors / ACK timeouts</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Invalid Serial Events</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=host event_type=CAPTURE_HEALTH
+| stats latest(invalid_or_mismatched) as value
+| fillnull value=0 value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x53a051","0xf8be34","0xdc4e41"]</option>
+        <option name="rangeValues">[1,10]</option>
+        <option name="underLabel">host bridge rejected/malformed lines</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>HEC Delivery Failures</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=host event_type=CAPTURE_HEALTH
+| stats latest(splunk_failed) as value
+| fillnull value=0 value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x53a051","0xdc4e41"]</option>
+        <option name="rangeValues">[1]</option>
+        <option name="underLabel">firmware events not delivered live</option>
+      </single>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 3 — DEVICE / FIRMWARE HEALTH
+       ================================================================ -->
+  <row>
+    <panel>
+      <title>Current Device Health and Identity Context</title>
+      <table>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware
+| dedup event_id
+| eval Device=coalesce(device_id,host,"unknown")
+| stats latest(_time) as last_seen latest(event_type) as last_event latest(severity) as severity latest(sender_id) as sender_id latest(generation) as generation max(sequence) as max_sequence max(event_counter) as event_counter latest(capture_id) as capture_id by Device role
+| eval age_seconds=now()-last_seen
+| eval Status=case(age_seconds < 120,"ONLINE",age_seconds < 300,"IDLE",true(),"OFFLINE")
+| eval SenderID=if(sender_id>0,printf("0x%08X",sender_id),"-")
+| eval LastSeen=strftime(last_seen,"%Y-%m-%d %H:%M:%S")
+| rename role as Role last_event as "Last Event" generation as Generation max_sequence as "Max Sequence" event_counter as "Event Counter" capture_id as "Capture ID"
+| table Device Role Status "Last Event" LastSeen SenderID Generation "Max Sequence" "Event Counter" "Capture ID"]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+        <format type="color" field="Status">
+          <colorPalette type="map">{"ONLINE":"#53a051","IDLE":"#f8be34","OFFLINE":"#dc4e41"}</colorPalette>
+        </format>
+      </table>
+    </panel>
+
+    <panel>
+      <title>Boot, Provisioning and Readiness Events</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$"
+event_type IN (WIFI_CONNECTED,SERIAL_TELEMETRY_READY,CRYPTO_PROFILE_ACTIVE,DEVICE_AUTH_ACTIVE,SENDER_STATE_NEW,PAIRING_CODE_READY,REPLAY_STATE_RESTORED,KEY_ACTIVE,RECEIVER_FINGERPRINT_READY,MONITOR_ACTIVE,GATEWAY_LISTENING,GATEWAY_STATIC_IP,GATEWAY_DISCOVERY_OK,GATEWAY_FALLBACK_IP)
+| dedup event_id
+| stats count by event_type
+| sort - count]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.legend.placement">none</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 4 — CRYPTOGRAPHIC PIPELINE COUNTS
+       ================================================================ -->
+  <row>
+    <panel>
+      <title>Successful Cryptographic Pipeline — Stage-by-Stage Evidence</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware
+event_type IN (PK_AUTH_OK,KEM_HKDF_DONE,AEAD_ENCRYPT_DONE,MSG_DELIVERED,DEVICE_AUTH_OK,KEM_DECAP_OK,HKDF_DONE,AEAD_DECRYPT_OK,MSG_DECRYPTED)
+| dedup event_id
+| eval Stage=case(
+    event_type="PK_AUTH_OK","01 Sender - PK pin verified",
+    event_type="KEM_HKDF_DONE","02 Sender - KEM/HKDF",
+    event_type="AEAD_ENCRYPT_DONE","03 Sender - AEAD encrypt",
+    event_type="DEVICE_AUTH_OK","04 Gateway - device HMAC",
+    event_type="KEM_DECAP_OK","05 Gateway - KEM decap",
+    event_type="HKDF_DONE","06 Gateway - HKDF",
+    event_type="AEAD_DECRYPT_OK","07 Gateway - AEAD decrypt",
+    event_type="MSG_DECRYPTED","08 Gateway - message decrypted",
+    event_type="MSG_DELIVERED","09 Sender - authenticated ACK"
+  )
+| chart count over Stage by role]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 5 — THROUGHPUT / SEQUENCE PROGRESSION
+       ================================================================ -->
+  <row>
+    <panel>
+      <title>End-to-End Message Throughput</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type IN (MSG_DELIVERED,MSG_DECRYPTED)
+| dedup event_id
+| timechart span=10m count by event_type limit=2 useother=f]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Messages per 10 minutes</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+
+    <panel>
+      <title>Persistent Sequence Progression</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" sequence>0
+| dedup event_id
+| timechart span=10m max(sequence) by role]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Highest sequence observed</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 6 — SECURITY FAILURES / REJECTIONS
+       ================================================================ -->
+  <row>
+    <panel>
+      <title>Security Rejections and Fail-Closed Events</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$"
+event_type IN (PK_AUTH_FAIL,DEVICE_AUTH_FAIL,SENDER_AUTH_FAIL,ACK_AUTH_FAIL,AEAD_AUTH_FAIL,KEY_ID_FAIL,REPLAY_REJECT,MALFORMED_COAP_REJECT,SOURCE_BLOCKED,RATE_LIMIT_HIT,KEY_ROTATION_REQUIRED,STATE_PERSIST_FAIL,RNG_FAIL,DEVICE_AUTH_KEY_MISSING,SEND_FAILED,GATEWAY_DISCOVERY_FAIL)
+| dedup event_id
+| stats count by event_type
+| sort - count]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.legend.placement">none</option>
+        <option name="charting.seriesColors">["0xdc4e41","0xf8be34","0x9e69be","0x0099e0"]</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+
+    <panel>
+      <title>Threat / Rejection Timeline</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$"
+event_type IN (PK_AUTH_FAIL,DEVICE_AUTH_FAIL,SENDER_AUTH_FAIL,ACK_AUTH_FAIL,AEAD_AUTH_FAIL,KEY_ID_FAIL,REPLAY_REJECT,MALFORMED_COAP_REJECT,SOURCE_BLOCKED,RATE_LIMIT_HIT,KEY_ROTATION_REQUIRED,STATE_PERSIST_FAIL,RNG_FAIL,DEVICE_AUTH_KEY_MISSING,SEND_FAILED,GATEWAY_DISCOVERY_FAIL)
+| dedup event_id
+| timechart span=30m count by event_type limit=15 useother=f]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 7 — RELIABILITY / RESILIENCE
+       ================================================================ -->
+  <row>
+    <panel>
+      <single>
+        <title>Duplicate ACK Recovery</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=DUPLICATE_ACK
+| dedup event_id
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="underLabel">safe retransmission acknowledgements</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Replay Rejects</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=REPLAY_REJECT
+| dedup event_id
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x53a051","0xf8be34"]</option>
+        <option name="rangeValues">[1]</option>
+        <option name="underLabel">sequence / nonce replay</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Rate-Limit Hits</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=RATE_LIMIT_HIT
+| dedup event_id
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="underLabel">meta / temporary throttle</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Persistent-State Failures</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=STATE_PERSIST_FAIL
+| dedup event_id
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x53a051","0xdc4e41"]</option>
+        <option name="rangeValues">[1]</option>
+        <option name="underLabel">must remain zero</option>
+      </single>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Retries / Blocking / Throttling by Action</title>
+      <table>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type IN (MSG_RETRY,RATE_LIMIT_HIT,SOURCE_BLOCKED,REPLAY_REJECT,MALFORMED_COAP_REJECT,DUPLICATE_ACK)
+| dedup event_id
+| stats count as Count latest(_time) as LastSeen by role event_type action
+| eval LastSeen=strftime(LastSeen,"%Y-%m-%d %H:%M:%S")
+| rename role as Role event_type as Event action as Action
+| sort - Count]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">20</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 8 — KEY / PROVISIONING LIFECYCLE
+       ================================================================ -->
+  <row>
+    <panel>
+      <title>Key, Pairing, Fingerprint and Replay-State Lifecycle</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$"
+event_type IN (PAIRING_CODE_READY,KEY_ACTIVE,RECEIVER_FINGERPRINT_READY,REPLAY_STATE_RESTORED,KEY_ROTATION_REQUIRED,KEY_ID_FAIL,SENDER_STATE_NEW,DEVICE_AUTH_ACTIVE)
+| dedup event_id
+| stats count by event_type
+| sort - count]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+
+    <panel>
+      <title>Gateway Service Requests</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type IN (META_REQUEST,PK_REQUEST,DATA_REQUEST)
+| dedup event_id
+| timechart span=10m count by event_type limit=3 useother=f]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 9 — 24H ENDURANCE QUALITY
+       ================================================================ -->
+  <row>
+    <panel>
+      <title>24-Hour Endurance — Delivery / Decryption / Retry Rate (30 min bins)</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type IN (MSG_DELIVERED,MSG_DECRYPTED,MSG_RETRY,SEND_FAILED)
+| dedup event_id
+| timechart span=30m count by event_type limit=4 useother=f]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">zero</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.axisTitleY.text">Events per 30 minutes</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>24-Hour Research Summary</title>
+      <table>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware
+| dedup event_id
+| stats min(_time) as Start max(_time) as End count(eval(event_type="MSG_DELIVERED")) as Delivered count(eval(event_type="MSG_DECRYPTED")) as Decrypted count(eval(event_type="MSG_RETRY")) as Retries count(eval(event_type="SEND_FAILED")) as SendFailures count(eval(event_type="DEVICE_AUTH_FAIL" OR event_type="SENDER_AUTH_FAIL" OR event_type="PK_AUTH_FAIL" OR event_type="ACK_AUTH_FAIL" OR event_type="AEAD_AUTH_FAIL")) as AuthFailures count(eval(event_type="REPLAY_REJECT")) as ReplayRejects count(eval(event_type="STATE_PERSIST_FAIL")) as PersistFailures max(sequence) as MaxSequence dc(capture_id) as CaptureStreams dc(device_id) as Devices
+| eval DurationHours=round((End-Start)/3600,3)
+| eval Hi=if(Delivered>=Decrypted,Delivered,Decrypted), Lo=if(Delivered<=Decrypted,Delivered,Decrypted)
+| eval MatchPct=if(Hi=0,0,round((Lo/Hi)*100,4)), Gap=abs(Delivered-Decrypted)
+| eval DeliveredPerHour=if(DurationHours=0,0,round(Delivered/DurationHours,2))
+| eval Start=strftime(Start,"%Y-%m-%d %H:%M:%S"), End=strftime(End,"%Y-%m-%d %H:%M:%S")
+| rename DurationHours as "Duration h" MatchPct as "E2E Match %" Gap as "E2E Gap" DeliveredPerHour as "Delivered / h" SendFailures as "Send Failures" AuthFailures as "Auth Failures" ReplayRejects as "Replay Rejects" PersistFailures as "Persist Failures" MaxSequence as "Max Sequence" CaptureStreams as "Capture Streams"
+| table Start End "Duration h" Delivered Decrypted "E2E Gap" "E2E Match %" "Delivered / h" Retries "Send Failures" "Auth Failures" "Replay Rejects" "Persist Failures" "Max Sequence" Devices "Capture Streams"]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">5</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 9B — HOST CAPTURE / SPLUNK INGEST HEALTH
+       ================================================================ -->
+  <row>
+    <panel>
+      <title>Live Capture Bridge Health</title>
+      <table>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=host event_type=CAPTURE_HEALTH
+| stats latest(_time) as LastUpdate latest(captured) as FirmwareCaptured latest(queued) as FirmwareQueued latest(splunk_sent) as FirmwareSent latest(splunk_failed) as HECFailed latest(invalid_or_mismatched) as InvalidSerial latest(capture_uptime_seconds) as UptimeSeconds latest(capture_id) as CaptureID
+| eval LastUpdate=strftime(LastUpdate,"%Y-%m-%d %H:%M:%S")
+| eval "Capture Uptime"=case(UptimeSeconds<60,tostring(round(UptimeSeconds,0))." sec",UptimeSeconds<3600,tostring(round(UptimeSeconds/60,1))." min",true(),tostring(round(UptimeSeconds/3600,2))." h")
+| rename FirmwareCaptured as "Valid Firmware Events" FirmwareQueued as Queued FirmwareSent as "HEC Sent" HECFailed as "HEC Failed" InvalidSerial as "Invalid / Rejected Serial" CaptureID as "Capture ID"
+| table LastUpdate "Capture Uptime" "Valid Firmware Events" Queued "HEC Sent" "HEC Failed" "Invalid / Rejected Serial" "Capture ID"]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">5</option>
+        <format type="color" field="HEC Failed">
+          <colorPalette type="minMidMax" minColor="#53a051" midColor="#f8be34" maxColor="#dc4e41"></colorPalette>
+        </format>
+        <format type="color" field="Invalid / Rejected Serial">
+          <colorPalette type="minMidMax" minColor="#53a051" midColor="#f8be34" maxColor="#dc4e41"></colorPalette>
+        </format>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       ROW 10 — EVIDENCE / AUDIT FEED
+       ================================================================ -->
+  <row>
+    <panel>
+      <title>Firmware Evidence Feed</title>
+      <table>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware
+| dedup event_id
+| eval Device=coalesce(device_id,host,"unknown")
+| eval Severity=upper(coalesce(severity,"INFO"))
+| eval Action=coalesce(action,"-")
+| eval SenderID=if(sender_id>0,printf("0x%08X",sender_id),"-")
+| table _time Device role SenderID generation sequence event_type Severity Action event_counter event_id
+| rename _time as Time role as Role generation as Generation sequence as Sequence event_type as Event event_counter as "Event Counter" event_id as "Event ID"
+| sort - Time
+| head 60]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">15</option>
+        <format type="color" field="Severity">
+          <colorPalette type="map">{"CRITICAL":"#b00020","HIGH":"#dc4e41","MEDIUM":"#f8be34","LOW":"#53a051","INFO":"#0099e0"}</colorPalette>
+        </format>
+        <format type="color" field="Event">
+          <colorPalette type="map">{"MSG_DELIVERED":"#53a051","MSG_DECRYPTED":"#53a051","DEVICE_AUTH_OK":"#53a051","PK_AUTH_OK":"#53a051","AEAD_DECRYPT_OK":"#53a051","KEM_DECAP_OK":"#0099e0","PK_AUTH_FAIL":"#dc4e41","DEVICE_AUTH_FAIL":"#dc4e41","SENDER_AUTH_FAIL":"#dc4e41","ACK_AUTH_FAIL":"#dc4e41","AEAD_AUTH_FAIL":"#dc4e41","STATE_PERSIST_FAIL":"#b00020","RNG_FAIL":"#b00020","REPLAY_REJECT":"#f8be34","RATE_LIMIT_HIT":"#f8be34"}</colorPalette>
+        </format>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       NETWORK RESILIENCE RESEARCH
+       Requires pqc_live_to_splunk_v4_resilience.py so events are tagged with
+       network_profile/run_id and textual [BENCH] records become PQC_BENCH.
+       ================================================================ -->
+  <row>
+    <panel>
+      <html>
+        <div style="padding:12px 16px;border-left:5px solid #f8be34;background:#20262e;">
+          <h2 style="margin:0;color:#ffffff;">Network Resilience — Routed Pi 1 Impairment Evidence</h2>
+          <p style="margin:6px 0 0 0;color:#b8c7d9;">
+            Sender on BL602-LAB → Pi 1 routing/NAT → receiver. Profiles are tagged by the host capture bridge so delay, jitter, loss, retry recovery and fail-closed outcomes can be compared without mixing runs.
+          </p>
+          <p style="margin:5px 0 0 0;color:#9fb3c8;">
+            PQC_BENCH is host-derived from the firmware [BENCH] serial line; native firmware security events retain origin=firmware.
+          </p>
+        </div>
+      </html>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <single>
+        <title>Successful Retry Recoveries</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=PQC_BENCH role=sender network_profile="$net_tok$" run_id="$run_tok$" attempts>1 ok=1
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="underLabel">delivery succeeded after retransmission</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Retry Events</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware event_type=MSG_RETRY network_profile="$net_tok$" run_id="$run_tok$"
+| dedup event_id
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="underLabel">bounded retransmission attempts</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Terminal Send Failures</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware event_type=SEND_FAILED network_profile="$net_tok$" run_id="$run_tok$"
+| dedup event_id
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="underLabel">retry budget exhausted / fail closed</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Sender Bench Samples</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=PQC_BENCH role=sender network_profile="$net_tok$" run_id="$run_tok$"
+| stats count as value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="underLabel">structured RTT / attempts observations</option>
+      </single>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <table>
+        <title>Network Profile Summary</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" network_profile="$net_tok$" run_id="$run_tok$" event_type IN (PQC_BENCH,MSG_DELIVERED,MSG_RETRY,SEND_FAILED,NETWORK_PROFILE_START)
+| stats count(eval(event_type="PQC_BENCH" AND role="sender")) as BenchSamples
+        count(eval(event_type="MSG_DELIVERED")) as Delivered
+        count(eval(event_type="MSG_RETRY")) as Retries
+        count(eval(event_type="SEND_FAILED")) as SendFailures
+        count(eval(event_type="PQC_BENCH" AND role="sender" AND attempts>1 AND ok=1)) as RetryRecoveries
+        avg(eval(if(event_type="PQC_BENCH" AND role="sender" AND ok=1,rtt_ms,null()))) as AvgRTT_ms
+        perc50(eval(if(event_type="PQC_BENCH" AND role="sender" AND ok=1,rtt_ms,null()))) as MedianRTT_ms
+        perc95(eval(if(event_type="PQC_BENCH" AND role="sender" AND ok=1,rtt_ms,null()))) as P95RTT_ms
+        max(eval(if(event_type="PQC_BENCH" AND role="sender" AND ok=1,rtt_ms,null()))) as MaxRTT_ms
+        values(configured_delay_ms) as Delay_ms
+        values(configured_jitter_ms) as Jitter_ms
+        values(configured_loss_pct) as Loss_pct
+        values(impairment_target) as Target
+        by network_profile run_id
+| eval AvgRTT_ms=round(AvgRTT_ms,2), MedianRTT_ms=round(MedianRTT_ms,2), P95RTT_ms=round(P95RTT_ms,2), MaxRTT_ms=round(MaxRTT_ms,2)
+| sort network_profile run_id]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">20</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <chart>
+        <title>Sender RTT by Network Profile</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=PQC_BENCH role=sender ok=1 network_profile="$net_tok$" run_id="$run_tok$"
+| timechart span=10s avg(rtt_ms) as AvgRTT_ms by network_profile limit=10 useother=f]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Sender Attempts Distribution</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=PQC_BENCH role=sender network_profile="$net_tok$" run_id="$run_tok$"
+| eval Outcome=if(ok=1,"ok","failed")
+| stats count by network_profile attempts Outcome
+| eval Series="attempts=".attempts." ".Outcome
+| chart sum(count) over network_profile by Series]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <table>
+        <title>Successful Retry-Recovery Evidence</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" event_type=PQC_BENCH role=sender network_profile="$net_tok$" run_id="$run_tok$" attempts>1 ok=1
+| table _time run_id network_profile sequence rtt_ms attempts configured_loss_pct configured_delay_ms configured_jitter_ms impairment_target
+| rename _time as Time run_id as "Run ID" network_profile as Profile sequence as Sequence rtt_ms as "RTT ms" attempts as Attempts configured_loss_pct as "Loss %" configured_delay_ms as "Delay ms" configured_jitter_ms as "Jitter ms" impairment_target as Target
+| sort - Time]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">20</option>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <title>Retry / Fail-Closed Events</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware network_profile="$net_tok$" run_id="$run_tok$" event_type IN (MSG_RETRY,SEND_FAILED)
+| dedup event_id
+| table _time run_id network_profile role sequence event_type action severity
+| rename _time as Time run_id as "Run ID" network_profile as Profile role as Role sequence as Sequence event_type as Event action as Action severity as Severity
+| sort - Time]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">20</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <table>
+        <title>Network Profile Start / End Markers</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=host event_type IN (NETWORK_PROFILE_START,NETWORK_PROFILE_END) network_profile="$net_tok$" run_id="$run_tok$"
+| table _time event_type run_id network_profile configured_delay_ms configured_jitter_ms configured_loss_pct impairment_direction impairment_target capture_uptime_seconds captured derived_bench
+| rename _time as Time event_type as Marker run_id as "Run ID" network_profile as Profile configured_delay_ms as "Delay ms" configured_jitter_ms as "Jitter ms" configured_loss_pct as "Loss %" impairment_direction as Direction impairment_target as Target capture_uptime_seconds as "Uptime s" derived_bench as "Bench events"
+| sort - Time]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">20</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       DTLS BASELINE COMPARISON
+       ================================================================ -->
+  <row>
+    <panel>
+      <html>
+        <div style="padding:12px 16px;border-left:5px solid #0099e0;background:#20262e;">
+          <h2 style="margin:0;color:#ffffff;">DTLS 1.2 Baseline Comparison</h2>
+          <p style="margin:6px 0 0 0;color:#b8c7d9;">
+            Classical comparison path: DTLS 1.2 / ECDHE P-256 / ECDSA P-256 / AES-256-CCM / CoAP over UDP :5684. Kept separate from PQC application-protocol KPIs because authentication and session semantics differ.
+          </p>
+        </div>
+      </html>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <single>
+        <title>DTLS Messages Successful</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" profile=dtls_aes256 role=sender event_type IN (DTLS_HEALTH,DTLS_RUN_COMPLETE)
+| stats latest(messages_success) as value
+| fillnull value=0 value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="underLabel">baseline sender total</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>DTLS Messages Failed</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" profile=dtls_aes256 role=sender event_type IN (DTLS_HEALTH,DTLS_RUN_COMPLETE)
+| stats latest(messages_failed) as value
+| fillnull value=0 value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x53a051","0xdc4e41"]</option>
+        <option name="rangeValues">[1]</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>DTLS Handshakes Successful</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" profile=dtls_aes256 role=sender event_type IN (DTLS_HEALTH,DTLS_RUN_COMPLETE)
+| stats latest(handshakes_success) as value
+| fillnull value=0 value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>DTLS Handshakes Failed</title>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" profile=dtls_aes256 role=sender event_type IN (DTLS_HEALTH,DTLS_RUN_COMPLETE)
+| stats latest(handshakes_failed) as value
+| fillnull value=0 value]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="useColors">1</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x53a051","0xdc4e41"]</option>
+        <option name="rangeValues">[1]</option>
+      </single>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>DTLS Handshake Timing</title>
+      <table>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" profile=dtls_aes256 event_type=DTLS_HANDSHAKE_OK
+| stats count as Handshakes avg(handshake_ms) as mean_ms median(handshake_ms) as median_ms stdev(handshake_ms) as sd_ms perc95(handshake_ms) as p95_ms perc99(handshake_ms) as p99_ms min(handshake_ms) as min_ms max(handshake_ms) as max_ms by role
+| eval mean_ms=round(mean_ms,2),median_ms=round(median_ms,2),sd_ms=round(sd_ms,2),p95_ms=round(p95_ms,2),p99_ms=round(p99_ms,2),min_ms=round(min_ms,2),max_ms=round(max_ms,2)
+| rename role as Role mean_ms as "Mean ms" median_ms as "Median ms" sd_ms as "SD ms" p95_ms as "P95 ms" p99_ms as "P99 ms" min_ms as "Minimum ms" max_ms as "Maximum ms"
+| table Role Handshakes "Mean ms" "Median ms" "SD ms" "P95 ms" "P99 ms" "Minimum ms" "Maximum ms"]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+
+    <panel>
+      <title>DTLS Per-Message RTT Statistics</title>
+      <table>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" profile=dtls_aes256 event_type=DTLS_MESSAGE_OK role=sender
+| stats count as Messages avg(rtt_ms) as mean_ms median(rtt_ms) as median_ms stdev(rtt_ms) as sd_ms perc95(rtt_ms) as p95_ms perc99(rtt_ms) as p99_ms min(rtt_ms) as min_ms max(rtt_ms) as max_ms
+| eval mean_ms=round(mean_ms,2),median_ms=round(median_ms,2),sd_ms=round(sd_ms,2),p95_ms=round(p95_ms,2),p99_ms=round(p99_ms,2),min_ms=round(min_ms,2),max_ms=round(max_ms,2)
+| rename mean_ms as "Mean ms" median_ms as "Median ms" sd_ms as "SD ms" p95_ms as "P95 ms" p99_ms as "P99 ms" min_ms as "Minimum ms" max_ms as "Maximum ms"
+| table Messages "Mean ms" "Median ms" "SD ms" "P95 ms" "P99 ms" "Minimum ms" "Maximum ms"]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">5</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>DTLS Progress / Health</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" profile=dtls_aes256 role=sender event_type=DTLS_HEALTH
+| timechart span=10m latest(messages_success) as Successful latest(messages_failed) as Failed]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+
+    <panel>
+      <title>DTLS Failures and Errors</title>
+      <table>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" profile=dtls_aes256 event_type IN (DTLS_HANDSHAKE_FAIL,DTLS_MESSAGE_FAIL,DTLS_ERROR,DTLS_SERIAL_ERROR)
+| eval Device=coalesce(device,device_id,host,"unknown")
+| eval Reason=coalesce(reason,error,message,"unspecified")
+| stats count as Count latest(_time) as last_seen by Device role event_type Reason
+| eval last_seen=strftime(last_seen,"%Y-%m-%d %H:%M:%S")
+| rename role as Role event_type as Event last_seen as "Last Seen"
+| table Device Role Event Reason Count "Last Seen"
+| sort - Count]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">15</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ================================================================
+       RAW EVENT COUNTS / DIAGNOSTICS
+       ================================================================ -->
+  <row>
+    <panel>
+      <title>All Firmware Event Types — Current Experiment</title>
+      <chart>
+        <search>
+          <query><![CDATA[index=pqc_iot sourcetype="pqc:iot:event" experiment_id="$exp_tok$" origin=firmware
+| dedup event_id
+| stats count by role event_type
+| sort - count]]></query>
+          <earliest>$time_tok.earliest$</earliest>
+          <latest>$time_tok.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+
+</dashboard>

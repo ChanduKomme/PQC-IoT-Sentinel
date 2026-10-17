@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="380" viewBox="0 0 1280 380" role="img" aria-labelledby="title desc">
+<title id="title">PQC-IoT Sentinel - Beyond the Handshake</title>
+<desc id="desc">Conference Version 1 research artifact. Two 24-hour campaigns, five official network profiles, and reproducible evidence.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#081c2d"/><stop offset="1" stop-color="#123747"/></linearGradient><linearGradient id="line"><stop stop-color="#49e5bc"/><stop offset="1" stop-color="#7fa5ff"/></linearGradient><pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#69b3c7" stroke-opacity=".08"/></pattern></defs>
+<rect width="1280" height="380" rx="20" fill="url(#bg)"/><rect width="1280" height="380" rx="20" fill="url(#grid)"/>
+<g fill="none" stroke="url(#line)" stroke-width="2" opacity=".65"><path d="M960 50h130l30 30v200l-30 30H960l-30-30V80z"/><path d="M990 90h70l25 25v130l-25 25h-70l-25-25V115z"/><path d="M1010 130h30l15 15v70l-15 15h-30l-15-15v-70z"/><path d="M930 115h-62l-30-30h-50M930 165h-80l-25 25h-65M930 245h-50l-35 35h-55M1120 115h65M1120 245h65"/></g>
+<g fill="#49e5bc"><circle cx="788" cy="85" r="5"/><circle cx="760" cy="190" r="5"/><circle cx="790" cy="280" r="5"/><circle cx="1185" cy="115" r="5"/><circle cx="1185" cy="245" r="5"/></g>
+<rect x="54" y="43" width="243" height="30" rx="15" fill="#194c50"/><text x="72" y="63" fill="#9bf0d4" font-size="12" letter-spacing="2" font-family="Arial,sans-serif">CONFERENCE ARTIFACT / V1</text>
+<text x="54" y="131" fill="#fff" font-family="Arial,sans-serif" font-size="49" font-weight="700">PQC-IoT Sentinel</text>
+<text x="56" y="177" fill="#b8d3e3" font-family="Arial,sans-serif" font-size="26">Beyond the Handshake</text>
+<text x="56" y="215" fill="#90b2c6" font-family="Arial,sans-serif" font-size="17">Sustained messaging. Recovery. Measurement integrity.</text>
+<path d="M56 244h655" stroke="#3e6575"/>
+<g font-family="Arial,sans-serif"><text x="56" y="291" fill="#fff" font-size="30" font-weight="700">2 × 24 h</text><text x="56" y="320" fill="#9bbccf" font-size="14">primary campaigns</text><text x="292" y="291" fill="#fff" font-size="30" font-weight="700">5 profiles</text><text x="292" y="320" fill="#9bbccf" font-size="14">official network runs</text><text x="526" y="291" fill="#49e5bc" font-size="30" font-weight="700">Raw → results</text><text x="526" y="320" fill="#9bbccf" font-size="14">auditable reconstruction</text></g>
+</svg>

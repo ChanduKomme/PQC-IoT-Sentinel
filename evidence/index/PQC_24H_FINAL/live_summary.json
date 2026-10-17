@@ -1,0 +1,11 @@
+{
+  "experiment_id": "pqc-experiment",
+  "captured": 394338,
+  "queued": 394338,
+  "splunk_sent": 394338,
+  "splunk_failed": 0,
+  "invalid_or_mismatched": 7,
+  "capture_health_hec_failed": 0,
+  "host_capture_id": "c40cd0047772460e99841965057cf798",
+  "capture_uptime_seconds": 86400.172
+}

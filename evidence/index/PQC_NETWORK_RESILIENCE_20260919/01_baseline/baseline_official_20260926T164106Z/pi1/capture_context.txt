@@ -1,0 +1,8 @@
+profile=baseline_official_20260926T164106Z
+duration_seconds=3600
+capture_started_utc=2026-09-26T16:43:59+00:00
+filter=udp port 5683
+interface=any
+capture_ended_utc=2026-09-26T17:29:15+00:00
+tcpdump_exit_code=0
+pcap_packets=12084

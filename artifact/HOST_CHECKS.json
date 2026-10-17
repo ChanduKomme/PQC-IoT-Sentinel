@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "created_utc": "2026-10-17T00:28:35Z",
+  "python": "3.12.14",
+  "platform": "Linux",
+  "passed": true,
+  "checks": [
+    {
+      "name": "Python syntax",
+      "pass": true
+    },
+    {
+      "name": "Python lifecycle, evidence and measurement tests",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 1.321,
+      "output": "test_dtls_success_rtt_only (test_tools.ToolsTest.test_dtls_success_rtt_only) ... ok\ntest_env_is_data (test_tools.ToolsTest.test_env_is_data) ... ok\ntest_event_provenance_and_dedup (test_tools.ToolsTest.test_event_provenance_and_dedup) ... ok\ntest_fault_validation (test_tools.ToolsTest.test_fault_validation) ... ok\ntest_fingerprint_validation (test_tools.ToolsTest.test_fingerprint_validation) ... ok\ntest_governance_file_resolves (test_tools.ToolsTest.test_governance_file_resolves) ... ok\ntest_lifecycle_and_headers (test_tools.ToolsTest.test_lifecycle_and_headers) ... ok\ntest_registry_validation (test_tools.ToolsTest.test_registry_validation) ... ok\ntest_tvla_input_and_shift (test_tools.ToolsTest.test_tvla_input_and_shift) ... ok\ntest_verifier_exact_counts (test_tools.ToolsTest.test_verifier_exact_counts) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 1.214s\n\nOK"
+    },
+    {
+      "name": "Dashboard API tests",
+      "pass": true,
+      "skipped": true,
+      "output": "Install requirements-dev.txt to run optional API tests"
+    },
+    {
+      "name": "CoAP and wire format compilation",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 0.239,
+      "output": ""
+    },
+    {
+      "name": "CoAP and wire format",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 0.005,
+      "output": "PASS: strict CoAP bounds, roundtrip, wire v3 layout and ACK domain"
+    },
+    {
+      "name": "State transitions compilation",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 0.11,
+      "output": ""
+    },
+    {
+      "name": "State transitions",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 0.006,
+      "output": "PASS: CRC, counter overflow, same-generation persistence, rotation, rollback rejection"
+    },
+    {
+      "name": "RNG and KEM compilation",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 1.1,
+      "output": ""
+    },
+    {
+      "name": "RNG and KEM",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 0.043,
+      "output": "[pqkem] mbedtls_ctr_drbg_seed failed, ret=-1\n[pqkem] mbedtls_ctr_drbg_seed failed, ret=-1\n[pqkem] RNG failure; operation rejected\n[pqkem] crypto_kem_enc ret=0\n[pqkem] RNG failure; operation rejected\n[pqkem] crypto_kem_keypair ret=0\nPASS: entropy failures clear outputs; 100 real scalar KEM roundtrips and implicit-rejection checks"
+    },
+    {
+      "name": "sender firmware syntax/storage compilation (test stubs)",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 0.573,
+      "output": ""
+    },
+    {
+      "name": "sender actual storage functions (simulated flash)",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 0.01,
+      "output": "[EVENT] {\"event_type\":\"SENDER_STATE_NEW\",\"severity\":\"info\",\"action\":\"new_identity_state\",\"origin\":\"firmware\",\"role\":\"sender\",\"device_id\":\"sender-53454E31\",\"experiment_id\":\"lab-unset\",\"sender_id\":0,\"generation\":0,\"sequence\":0,\"uptime_ticks\":100,\"event_counter\":1}\nPASS: actual sender EasyFlash functions reserve ahead, skip on reboot and halt on write/corruption failures"
+    },
+    {
+      "name": "receiver firmware syntax/storage compilation (test stubs)",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 0.458,
+      "output": ""
+    },
+    {
+      "name": "receiver actual storage functions (simulated flash)",
+      "pass": true,
+      "exit_code": 0,
+      "seconds": 0.004,
+      "output": "[Receiver] easyflash_init ok\n[Receiver] gw_store_load: blob missing/short read_len=0 saved_len=0\n[Receiver] gw_store_init_or_load: generating new keypair\n[Receiver] gw_store_save: keypair saved to easyflash\n[Receiver] gw_store_save: keypair saved to easyflash\n[Receiver] gw_store_load: existing keypair loaded from easyflash\n[Receiver] gw_store_save: keypair saved to easyflash\n[Receiver] gw_store_save: verify crc mismatch stored=0x28142E32 actual=0x28142E32\n[Receiver] gw_store_save: ef_set_env_blob failed rc=-1\n[Receiver] gw_store_load: bad magic 0x474B5355\nPASS: actual receiver store preserves counters and key, rejects stale readback, write failure and corruption"
+    }
+  ],
+  "not_run": [
+    "BL602 SDK cross compilation/link",
+    "physical flashing, Wi-Fi and EasyFlash power-loss behavior",
+    "target entropy quality and cryptographic conformance vectors",
+    "physical security measurements"
+  ],
+  "scope": "Local software regression tests. Test RNG is a fixture; not firmware randomness."
+}

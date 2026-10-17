@@ -1,0 +1,9 @@
+finding=receiver_key_message_limit_reached
+key_id=1
+status=3
+rotation_required=1
+message_count=99999
+max_messages=99999
+sender_behavior=fail_closed_rotation_required
+diagnostic_receiver_sha256=6cf0e35a97b4a78637bcd3c03977dd8e280937c18785e5cf03bb497d277be512
+original_receiver_sha256=ea61020d698a6899c7f3a646d3ad9c4a2d08c32dd963bbf1d2130793042e6316

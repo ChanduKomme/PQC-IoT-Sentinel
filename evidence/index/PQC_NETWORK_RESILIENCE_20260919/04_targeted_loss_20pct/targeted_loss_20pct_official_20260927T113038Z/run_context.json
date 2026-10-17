@@ -1,0 +1,14 @@
+{
+  "experiment_id": "pqc-experiment",
+  "run_id": "targeted_loss_20pct_official_20260927T113038Z",
+  "network_profile": "targeted_loss_20pct",
+  "configured_delay_ms": 0.0,
+  "configured_jitter_ms": 0.0,
+  "configured_loss_pct": 20.0,
+  "impairment_direction": "sender_to_receiver",
+  "impairment_target": "receiver_udp5683_only",
+  "baud": 921600,
+  "sender_port": "/dev/serial/by-path/pci-0000:00:14.0-usb-0:9:1.0-port0",
+  "receiver_port": "/dev/serial/by-path/pci-0000:00:14.0-usb-0:10:1.0-port0",
+  "started_utc": "2026-09-27T11:32:10.625759+00:00"
+}

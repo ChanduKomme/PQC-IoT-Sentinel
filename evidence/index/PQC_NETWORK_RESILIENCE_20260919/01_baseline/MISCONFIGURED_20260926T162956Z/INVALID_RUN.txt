@@ -1,0 +1,6 @@
+status=INVALID
+official_baseline=no
+reason=collector_started_with_stale_run_id_and_empty_out_dir
+observed_run_id=baseline_20260919T210153Z
+intended_run_id=baseline_official_20260926T162956Z
+notes=Collector wrote to project-root sender/ and receiver/ instead of the intended baseline run directory. Do not include this attempt in official baseline statistics.

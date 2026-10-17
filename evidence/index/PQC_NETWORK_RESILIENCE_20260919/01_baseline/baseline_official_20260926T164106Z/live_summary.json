@@ -1,0 +1,20 @@
+{
+  "experiment_id": "pqc-experiment",
+  "run_id": "baseline_official_20260926T164106Z",
+  "network_profile": "baseline",
+  "configured_delay_ms": 0.0,
+  "configured_jitter_ms": 0.0,
+  "configured_loss_pct": 0.0,
+  "impairment_direction": "none",
+  "impairment_target": "none",
+  "captured_firmware_events": 13007,
+  "derived_bench_events": 3252,
+  "queued": 16259,
+  "splunk_sent": 16259,
+  "splunk_failed": 0,
+  "invalid_or_mismatched": 1,
+  "host_event_hec_failed": 0,
+  "host_capture_id": "d7ed970184f14a6eaf83a26b94165852",
+  "capture_uptime_seconds": 2899.135,
+  "ended_utc": "2026-09-26T17:29:25.569488+00:00"
+}

@@ -12,7 +12,7 @@ SHA-256:
 bbf32d7c73f204c96a1b22bcf69fad788af8461100167e7663a4601b785bc511
 ```
 
-The archived diagnostic copy was retained as the sender image associated with the corrected BL602-LAB routing path.
+The supplied diagnostic archive identified this sender image with the corrected BL602-LAB routing path. The public package retains its identity; the compiled image is excluded because it may embed local credentials.
 
 ### Controlled-rotation receiver firmware
 
@@ -68,3 +68,7 @@ A Version 2 campaign should record, before flashing:
 - run ID and analysis-script revision.
 
 Those future controls should not be retroactively asserted for Version 1.
+
+## Public packaging note
+
+Compiled images and ELF files are not published in this sanitized release. See [excluded file identities](EXCLUDED_PRIVATE_BUILD_FILES.json) and [resource build identities](../evidence/resources/build_identities.csv). A SHA-256 identity does not prove that the inspected source produced that image.

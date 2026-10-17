@@ -1,0 +1,5 @@
+   text	   data	    bss	    dec	    hex	filename
+ 602110	      0	  94102	 696212	  a9f94	dtls_receiver.elf
+ 590938	      0	  94102	 685040	  a73f0	dtls_sender.elf
+ 401742	      0	 107324	 509066	  7c48a	pqc_receiver.elf
+ 398254	      0	 103652	 501906	  7a892	pqc_sender.elf

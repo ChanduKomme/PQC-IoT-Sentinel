@@ -1,0 +1,10 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+**/build_out/
+**/build_config.h
+pi2_trust_authority/state/
+results/
+firmware-local/

@@ -1,0 +1,9 @@
+filename,bytes,sha256,status,text_bytes,data_bytes,bss_bytes
+dtls_receiver.bin,602236,9155e7156370aa887bc77631b55fc80c0091b41cd165095dc6f6daf168310cbc,identity recorded; secret-bearing binary excluded,,,
+dtls_receiver.elf,6935444,356102b0a35c2c364a4e31c976363252f008aa446194e1a7832a97dd1f4272a5,identity recorded; secret-bearing binary excluded,602110,0,94102
+dtls_sender.bin,591064,687a203ca6007c08d096f765fe9630243de5b82c81b95e355e79ffa45922f9e9,identity recorded; secret-bearing binary excluded,,,
+dtls_sender.elf,6887588,8b6e8c8658c3b808b7afd197d7181e0b3b41547a7a5f817e7a76b7dd17091946,identity recorded; secret-bearing binary excluded,590938,0,94102
+pqc_receiver.bin,401872,18139fb1b9e6d29ff5a6d4f975fd86827f7eaf1d10cd683867e8981338f2d496,identity recorded; secret-bearing binary excluded,,,
+pqc_receiver.elf,5408196,56f138fd401310aee8632b2cd34928d61eaca455949bc047beb644ea0d16b90e,identity recorded; secret-bearing binary excluded,401742,0,107324
+pqc_sender.bin,398384,40c099771f62a9bcb366118e7bf851b4dd2cf0d5513030357baff152d2e0e9cd,identity recorded; secret-bearing binary excluded,,,
+pqc_sender.elf,5472644,79d6689f1615ea3e018deee49a47777fc6b24312ef0a603b3f736aabc3b67087,identity recorded; secret-bearing binary excluded,398254,0,103652

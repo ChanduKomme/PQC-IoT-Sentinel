@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "Cite this repository version when referring to the Version 1 experimental artifact. The final conference manuscript is not included."
+type: software
+title: "PQC-IoT Sentinel: Beyond the Handshake - Conference Version 1 Artifact"
+authors:
+  - family-names: "Komme"
+    given-names: "Chandu"
+version: "1.0.0"
+date-released: "2026-10-17"
+repository-code: "https://github.com/ChanduKomme/PQC-IoT-Sentinel"
+url: "https://pqcsecrity.live/evidence"
+keywords:
+  - post-quantum cryptography
+  - IoT
+  - BL602
+  - DTLS
+  - reproducibility

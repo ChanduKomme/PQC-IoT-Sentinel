@@ -1,0 +1,7 @@
+run_id=baseline_20260919T210153Z
+status=ABORTED
+official_baseline=no
+reason=sender_wifi_association_failure
+completed_sender_deliveries=72
+receiver_decryptions=72
+notes=Sender repeatedly failed association with BL602-LAB during the run. This run must not be included in the official 1000-cycle clean-baseline statistics.

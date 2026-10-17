@@ -1,0 +1,93 @@
+DTLS BL602 Runtime Memory Characterization
+Date: 2026-09-18
+
+Configuration
+-------------
+StackType_t: uint32_t = 4 bytes per stack unit
+
+DTLS receiver task:
+configured stack = 16384 units = 65536 bytes = 64 KiB
+
+DTLS sender task:
+configured stack = 12288 units = 49152 bytes = 48 KiB
+
+Experiment
+----------
+Short repeated-session memory-characterization run.
+Three DTLS sessions completed before stopping.
+This experiment is separate from the frozen official 24-hour DTLS endurance run.
+
+Receiver completed-session observation
+--------------------------------------
+free_heap      = 38912 bytes
+min_ever_free  = 33072 bytes
+stack_hwm      = 14920 units
+
+maximum observed stack consumption:
+16384 - 14920 = 1464 units
+1464 * 4 = 5856 bytes = 5.72 KiB
+stack utilization = 8.94 percent
+stack headroom = 91.06 percent
+
+difference between post-session free heap and minimum-ever free heap:
+38912 - 33072 = 5840 bytes
+
+Sender first clean completed-session observation
+------------------------------------------------
+free_heap      = 92976 bytes
+min_ever_free  = 49776 bytes
+stack_hwm      = 10968 units
+
+Sender later repeated-session observation
+-----------------------------------------
+free_heap      = 92976 bytes
+min_ever_free  = 49744 bytes
+stack_hwm      = 10956 units
+
+maximum observed sender stack consumption:
+12288 - 10956 = 1332 units
+1332 * 4 = 5328 bytes = 5.20 KiB
+stack utilization = 10.84 percent
+stack headroom = 89.16 percent
+
+lowest observed sender difference between post-session free heap
+and minimum-ever free heap:
+92976 - 49744 = 43232 bytes
+
+Repeated-session stability
+--------------------------
+Sender post-session free heap remained 92976 bytes.
+Receiver post-session free heap remained 38912 bytes.
+
+Across the observed sender completed sessions:
+minimum-ever free heap changed from 49776 to 49744 bytes (32 bytes).
+stack high-water mark changed from 10968 to 10956 units (12 units / 48 bytes).
+
+No progressive post-session free-heap depletion was observed in the
+recorded repeated-session samples.
+
+PQC receiver 24-hour reference
+------------------------------
+Valid heap samples: 32788
+first/last/min/max post-session free heap = 79200 bytes
+minimum-ever free heap = 70864 bytes
+
+Stack samples: 32790
+configured stack = 12288 units
+minimum HWM = 9656 units
+maximum observed stack consumption = 2632 units
+= 10528 bytes = 10.28 KiB
+stack utilization = 21.42 percent
+stack headroom = 78.58 percent
+
+Important limitation
+--------------------
+The PQC runtime-memory measurements cover the completed 24-hour endurance
+experiment. The DTLS runtime-memory measurements come from a short
+separate repeated-session characterization run. They therefore provide
+observed implementation-level resource evidence, but are not equal-duration
+peak-memory benchmarks.
+
+Minimum-ever-free heap values indicate allocator low-water marks. The
+difference from post-session free heap should not be interpreted as
+memory attributable to one specific cryptographic operation.

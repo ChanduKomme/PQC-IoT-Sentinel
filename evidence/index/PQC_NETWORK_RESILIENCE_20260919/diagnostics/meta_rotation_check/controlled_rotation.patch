@@ -1,0 +1,83 @@
+--- research_archive/PQC_NETWORK_RESILIENCE_20260919/diagnostics/meta_rotation_check/main_before_controlled_rotation.cpp	2026-09-26 13:07:44.789477228 +0200
++++ Receiver/Receiver/main.cpp	2026-09-26 13:10:20.205118758 +0200
+@@ -616,6 +616,71 @@
+ {
+     if (gw_store_load(store)) {
+         if(!reconcile_sender_states(store))return false;
++
++        /*
++         * One-time controlled lifecycle reprovisioning.
++         * Rotate only an explicitly expired gateway KEM key.
++         * Sender replay/freshness state in store->senders[] is preserved.
++         */
++        if (store->meta.status == PQC_KEY_STATUS_ROTATION_REQUIRED &&
++            store->meta.rotation_required != 0u &&
++            store->meta.max_messages != 0u &&
++            store->meta.message_count >= store->meta.max_messages) {
++
++            const uint32_t old_key_id = store->meta.key_id;
++            const uint32_t old_message_count = store->meta.message_count;
++
++            uint32_t preserved_last_counter = 0u;
++            for (size_t i = 0; i < PQC_MAX_AUTHORIZED_SENDERS; ++i) {
++                if (store->senders[i].last_counter > preserved_last_counter) {
++                    preserved_last_counter = store->senders[i].last_counter;
++                }
++            }
++
++            printf("[ROTATE] deliberate gateway key reprovisioning\r\n");
++            printf("[ROTATE] old_key_id=%lu old_message_count=%lu preserved_last_counter=%lu\r\n",
++                   (unsigned long)old_key_id,
++                   (unsigned long)old_message_count,
++                   (unsigned long)preserved_last_counter);
++
++            if (old_key_id == 0xFFFFFFFFu) {
++                printf("[ROTATE] ERROR: key_id exhausted\r\n");
++                return false;
++            }
++
++            if (!pqkem_keygen(store->pk, store->sk)) {
++                printf("[ROTATE] ERROR: new keypair generation failed\r\n");
++                return false;
++            }
++
++            if (!sha256_bytes(store->pk,
++                              PQKEM_PUBLIC_KEY_BYTES,
++                              store->meta.fingerprint)) {
++                printf("[ROTATE] ERROR: new fingerprint generation failed\r\n");
++                return false;
++            }
++
++            store->meta.key_id = old_key_id + 1u;
++            store->meta.status = PQC_KEY_STATUS_ACTIVE;
++            store->meta.rotation_required = 0u;
++            store->meta.created_at_ms = monotonic_ms();
++            store->meta.expires_at_ms = 0u;
++            store->meta.message_count = 0u;
++            store->meta.max_messages = PQC_KEY_MAX_MESSAGES_DEFAULT;
++
++            if (!gw_store_save(store)) {
++                printf("[ROTATE] ERROR: rotated key persistence failed\r\n");
++                return false;
++            }
++
++            printf("[ROTATE] SUCCESS new_key_id=%lu message_count=%lu preserved_last_counter=%lu\r\n",
++                   (unsigned long)store->meta.key_id,
++                   (unsigned long)store->meta.message_count,
++                   (unsigned long)preserved_last_counter);
++
++            return true;
++        }
++
+         return gw_store_save(store);
+     }
+     if(g_store_invalid || !g_easyflash_ready) return false; /* corruption must not rotate keys silently */
+@@ -873,7 +938,7 @@
+                                sizeof(msg) - 1u);
+                 continue;
+             }
+-            printf("[META-DIAG] key_id=%lu status=%u rotation=%u message_count=%lu max_messages=%lu\\r\\n",
++            printf("[META-DIAG] key_id=%lu status=%u rotation=%u message_count=%lu max_messages=%lu\r\n",
+                (unsigned long)g_store.meta.key_id,
+                (unsigned)g_store.meta.status,
+                (unsigned)g_store.meta.rotation_required,

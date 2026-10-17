@@ -1,103 +1,57 @@
-# Version 1 reproducibility guide
+# Reproduce Version 1
 
-## Scope
+## Numerical reproduction
 
-This guide describes how to inspect and reproduce the software/analysis workflow associated with **Beyond the Handshake: A 24-Hour Study of Post-Quantum Messaging and DTLS on BL602**.
-
-The paper reanalyses archived campaigns. This repository does not imply that a fresh hardware campaign was performed during packaging.
-
-## Integrity checks
-
-The publication PDF and sanitized public source snapshot are identified in `SHA256SUMS.txt`.
-
-Expected SHA-256 values:
-
-```text
-9b6b7862cacc96f0b14a8b6789b6c08d5eebcf1344fd9680ce2b195cc35ccaf9  Beyond_the_Handshake_Conference_Paper.pdf
-3335e0706a920db0a282023b07e0db95b464c8d979ad793b0f4953fad693e272  PQC_IoT_SENTINEL_V1_PUBLIC_SOURCE.zip
-```
-
-After placing both files in their documented locations, verify locally with:
+Use Python 3.10+ on a machine with roughly 700 MB free disk space. The numerical scripts use only the standard library. Clone or download this repository and run from its root:
 
 ```bash
-sha256sum paper/Beyond_the_Handshake_Conference_Paper.pdf
-sha256sum source/PQC_IoT_SENTINEL_V1_PUBLIC_SOURCE.zip
+python3 analysis/verify_integrity.py
+python3 analysis/extract_evidence.py
+python3 analysis/reproduce.py --check
 ```
 
-## Source package
+The first command checks the actual published files, excluding the manifest's own hash. The second verifies and safely extracts all nine public bundles into `.reproduce/raw/`. The third reconstructs primary and network observations and compares them with [results/reproduced_summary.json](../results/reproduced_summary.json), using numeric tolerances for floating-point arithmetic.
 
-Unpack the sanitized source archive:
+No SDK, board, Wi-Fi connection, Splunk account, or website availability is required for this analysis. Python assertions are used for integrity gates; do not run the scripts with `python -O`.
+
+Outputs go to `.reproduce/results/`:
+
+| File | Meaning |
+|---|---|
+| `reproduced_summary.json` | Complete reconstructed numerical summary and quantile method |
+| `rtt_samples.csv` | Successful primary message RTT samples |
+| `delivery_gaps.csv` | Host-observed intervals between successive deliveries |
+| `hourly_delivery.csv` | Delivery counts by hour from each run's first success |
+| `dtls_handshake_errors.csv` | Raw handshake-call errors absent from structured totals |
+| `network_completed_cycles.csv` | Structured and reconstructed completed-cycle denominators |
+| `retry_outcomes.csv` | Corrected transmission-attempt outcomes |
+| `network_seals.csv` | Original official network manifest hashes and verified member counts |
+
+The same small tables are committed under [results/derived/](../results/derived/). The full RTT/gap tables are generated locally to avoid duplicating the raw datasets in Git.
+
+## Figures
+
+For Python with Matplotlib installed:
 
 ```bash
-unzip PQC_IoT_SENTINEL_V1_PUBLIC_SOURCE.zip
-cd PQC_IoT_SENTINEL_UPDATED
+python3 -m pip install -r analysis/requirements-figures.txt
+python3 analysis/make_figures.py
 ```
 
-Recommended reading order:
+This renders PNG and SVG versions of successful RTT distributions, delivery continuity, and network denominator/failure-stage comparisons. The continuity plot shows the maximum observed gap per one-minute bin; raw gaps remain in the generated CSV. SVG/PNG export bytes can vary by renderer version; numerical reconstruction is the result-validation gate.
 
-1. `README.md`
-2. `PROJECT_ANALYSIS.md`
-3. `RUN_STEPS.md`
-4. protocol/source documentation
-5. `experiments/dtls_baseline/`
-6. network-emulation helpers
-7. validation and analysis tooling
+## Host source checks
 
-## Sanitization
+With GCC, G++, and Python available, run:
 
-The public package intentionally excludes live credentials and the DTLS development server private key. Example environment files contain placeholders only. Generate fresh local credentials for any reproduction build.
+```bash
+python3 source/project/tools/run_host_checks.py --report .reproduce/host_checks.json
+```
 
-Never publish:
+These are the inherited project's parser, state, RNG failure-path/round-trip, and simulated-storage tests. The test RNG is a fixture. The committed [host report](HOST_CHECKS.json) distinguishes passing checks, optional dashboard skips, and hardware checks that were not run. Full optional dashboard checks additionally need its Python dependencies and a built frontend.
 
-- real Wi-Fi passwords;
-- Splunk HEC tokens/passwords;
-- provisioned per-device authentication secrets;
-- development private keys;
-- local `.env` files containing secrets.
+## Hardware repetition is a separate task
 
-## Historical evidence boundary
+See [source build/provisioning instructions](../source/BUILD_AND_PROVISION.md) and [firmware provenance](FIRMWARE_PROVENANCE.md). The archive does not contain the external BL602 SDK/toolchain or deployable secrets. Provision new Wi-Fi, device authentication, and DTLS credentials before rebuilding. Sanitization changes source/binary identity; a new build is not a retroactive reproduction of the flashed historical image.
 
-The manuscript reports results reconstructed from author-supplied experiment archives. The public source snapshot does not by itself prove that every archived firmware image was built from exactly this source revision with identical compiler/configuration inputs. This is a known Version 1 limitation and must remain visible.
-
-## Reproduction levels
-
-### Level A — artifact integrity
-
-Verify checksums and inspect the manuscript, machine-readable result tables, protocol definitions, source, and analysis notes.
-
-### Level B — host-side software checks
-
-Create an isolated Python environment and run the host-side validation/tests documented by the source package. Synthetic fixtures should not be interpreted as hardware measurements.
-
-### Level C — short hardware reproduction
-
-Using your own BL602 boards and fresh local credentials:
-
-1. freeze source revision, SDK revision, compiler version and build flags;
-2. build sender and receiver;
-3. record binary/ELF hashes;
-4. flash boards and record role mapping;
-5. run a short baseline capture;
-6. reconcile sender/receiver structured events and raw serial;
-7. compare basic packet lengths and timing ranges with the manuscript.
-
-### Level D — independent experiment replication
-
-For a new scientific campaign, use independently restarted runs, frozen source-to-binary provenance, one terminal record per application cycle, full-cycle timing, and a priori stopping rules. Do not merge those new results into Version 1 evidence.
-
-## Network study semantics
-
-Publication reporting must keep these distinct:
-
-- original sealed structured-terminal-event view;
-- post-hoc completed-cycle view from raw serial + source semantics;
-- packet-level routed UDP loss;
-- successful-only RTT distributions.
-
-Packet loss is not identical to application-cycle loss, and successful-only RTT does not represent failed/censored cycle latency.
-
-## Live evidence portal
-
-Project evidence website: https://pqcsecrity.live/evidence
-
-The website is a dissemination layer. Exact paper reproduction should rely on archived records and analysis scripts rather than treating live dashboard counters as primary experimental data.
+The current artifact reproduces the archived analysis. It does not claim an independent hardware campaign, byte-identical target builds, ML-KEM conformance testing, or controlled physical power-cut validation.

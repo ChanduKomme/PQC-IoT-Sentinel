@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "relative_markdown_links": "pass",
+    "source_zip_exact_tree_match": "pass",
+    "private_key_headers_removed": "pass",
+    "provisioned_sender_key_zeroed": "pass",
+    "public_evidence_bundles": 9,
+    "source_files": 420,
+    "numerical_reconstruction": "pass",
+    "official_network_manifests": "pass",
+    "screenshots_visual_and_ocr_review": "pass; password labels are blank prompts"
+  },
+  "scope": "Packaging and analysis checks; no additional hardware experiments performed."
+}

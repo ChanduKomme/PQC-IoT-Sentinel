@@ -1,0 +1,6 @@
+condition,attempt_1,attempt_2,attempt_3,exhausted_after_3,extra_transmissions
+01_baseline,1000,0,0,0,0
+02_delay_200ms,1000,0,0,0,0
+03_random_loss_10pct,913,81,6,0,93
+04_targeted_loss_20pct,798,160,33,6,238
+05_targeted_loss_50pct,413,210,116,99,640

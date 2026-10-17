@@ -1,0 +1,2 @@
+Release 2.0.0: see validation/VALIDATION_REPORT.md and validation/host_checks.json.
+The old uploaded source-only validation transcript is superseded. No SDK build is claimed.
