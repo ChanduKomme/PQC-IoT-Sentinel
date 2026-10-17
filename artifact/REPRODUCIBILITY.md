@@ -42,13 +42,13 @@ This renders PNG and SVG versions of successful RTT distributions, delivery cont
 
 ## Host source checks
 
-With GCC, G++, and Python available, run:
+With GCC, G++, and Python 3.12+ available, run:
 
 ```bash
 python3 source/project/tools/run_host_checks.py --report .reproduce/host_checks.json
 ```
 
-These are the inherited project's parser, state, RNG failure-path/round-trip, and simulated-storage tests. The test RNG is a fixture. The committed [host report](HOST_CHECKS.json) distinguishes passing checks, optional dashboard skips, and hardware checks that were not run. Full optional dashboard checks additionally need its Python dependencies and a built frontend.
+These are the inherited project's parser, state, RNG failure-path/round-trip, and simulated-storage tests. The inherited serial-monitor helpers use Python 3.12 f-string syntax, so the source-wide syntax gate and CI use Python 3.12. The numerical analysis commands above remain compatible with Python 3.10+. The test RNG is a fixture. The committed [host report](HOST_CHECKS.json) distinguishes passing checks, optional dashboard skips, and hardware checks that were not run. Full optional dashboard checks additionally need its Python dependencies and a built frontend.
 
 ## Hardware repetition is a separate task
 

@@ -2,6 +2,8 @@
 
 This is a source reconstruction path. It does not certify that the current snapshot generated every historical experiment image.
 
+Use Python 3.12+ for the source tools and host-check suite. The inherited monitor helpers use Python 3.12 f-string syntax. The separate numerical-analysis scripts support Python 3.10+.
+
 1. Start from [project/RUN_STEPS.md](project/RUN_STEPS.md). Install the compatible external BL602 SDK/toolchain and set the local SDK configuration required by `project/tools/build.py`.
 2. Copy `project/.env.example` to a local `.env`, then fill in new Wi-Fi settings, board serial ports, receiver address and optional service settings. Keep local credentials out of Git.
 3. Use the included trust-authority/enrollment and provisioning tools to create fresh sender authentication keys and a receiver registry. Public sender keys are all zero and receiver slots disabled. Pin the newly created receiver public-key fingerprint before sending.
